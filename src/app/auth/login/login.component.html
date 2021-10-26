@@ -1,11 +1,11 @@
 <div class="hero min-h-screen bg-base-200">
   <div class="flex-col justify-center hero-content lg:flex-row">
     <div class="text-center lg:text-left">
-      <h1 class="mb-5 text-5xl font-bold">Hello there</h1>
-      <p class="mb-5">
-        Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
-        excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a
-        id nisi.
+      <img src="../../../assets/loading.gif" style="background: url(../../../assets/loading.gif);"/>
+      <h1 class="mb-5 text-5xl font-bold">Find Your Doc</h1>
+      <p class="mb-4">
+        Connect with your medical providers on a secure and private application
+        which takes care of all your medical needs.
       </p>
     </div>
     <div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
@@ -15,27 +15,17 @@
             <label class="label">
               <span class="label-text">Email</span>
             </label>
-            <input
-              type="email"
-              placeholder="email"
-              class="input input-bordered"
-              formControlName="email"
-            />
+            <input type="email" placeholder="email" class="input input-bordered" formControlName="email" />
             <div *ngIf="email?.invalid && (email?.dirty || email?.touched)">
-              <div *ngIf="email?.errors?.required">Email is required.</div>
-              <div *ngIf="email?.errors?.email">Please enter a valid email</div>
+              <div class="text-red-500 text-xs"  *ngIf="email?.errors?.required">Email is required.</div>
+              <div class="text-red-500 text-xs"  *ngIf="email?.errors?.email">Please enter a valid email</div>
             </div>
           </div>
           <div class="form-control">
             <label class="label">
               <span class="label-text">Password</span>
             </label>
-            <input
-              type="password"
-              placeholder="password"
-              class="input input-bordered"
-              formControlName="password"
-            />
+            <input type="password" placeholder="password" class="input input-bordered" formControlName="password" />
             <label class="label">
               <a href="#" class="label-text-alt">Forgot password?</a>
             </label>
@@ -44,12 +34,7 @@
             <input type="submit" value="Login" class="btn btn-primary" />
           </div>
           <div class="form-control mt-6">
-            <input
-              type="button"
-              value="Register"
-              class="btn btn-primary"
-              routerLink="/register"
-            />
+            <input type="button" value="Register" class="btn btn-primary" routerLink="/register" />
           </div>
         </div>
       </form>

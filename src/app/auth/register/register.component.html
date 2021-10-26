@@ -1,86 +1,56 @@
-<div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-  <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
-    <div class="card-body">
-      <div class="form-control">
-        <label class="label">
-          <span class="label-text">First Name</span>
-        </label>
-        <input
-          type="text"
-          placeholder="First Name"
-          class="input input-bordered"
-          formControlName="firstName"
-        />
-        <div
-          *ngIf="firstName?.invalid && (firstName?.dirty || firstName?.touched)"
-        >
-          <div *ngIf="firstName?.errors?.required">First Name is required.</div>
+<div class="flex justify-center mt-8">
+  <div class="card w-full max-w-sm shadow-2xl bg-base-100">
+    <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+      <div class="card-body">
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">First Name</span>
+          </label>
+          <input type="text" placeholder="First Name" class="input input-bordered" formControlName="firstName" />
+          <div *ngIf="firstName?.invalid && (firstName?.dirty || firstName?.touched)">
+            <div class="text-red-500 text-xs" *ngIf="firstName?.errors?.required">First Name is required.</div>
+          </div>
+        </div>
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Last Name</span>
+          </label>
+          <input type="text" placeholder="Last Name" class="input input-bordered" formControlName="lastName" />
+          <div *ngIf="lastName?.invalid && (lastName?.dirty || lastName?.touched)">
+            <div class="text-red-500 text-xs" *ngIf="lastName?.errors?.required">Last Name is required.</div>
+          </div>
+        </div>
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Email</span>
+          </label>
+          <input type="email" placeholder="Email" class="input input-bordered" formControlName="email" />
+          <!-- <div *ngIf="email?.invalid && (email?.dirty || email?.touched)">
+            <div *ngIf="email?.errors?.required">Email is required.</div>
+            <div *ngIf="email?.errors?.email">Please enter a valid email</div>
+          </div> -->
+        </div>
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Password</span>
+          </label>
+          <input type="password" placeholder="Password" class="input input-bordered" formControlName="password" />
+        </div>
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Confirm Password</span>
+          </label>
+          <input type="password" placeholder="Confirm Password" class="input input-bordered"
+            formControlName="confirmPassword" />
+        </div>
+        <div class="form-control mt-6">
+          <input type="submit" value="Regiter" class="btn btn-primary" />
+        </div>
+        <div class="form-control mt-6">
+          <input type="button" value="To Login" class="btn btn-primary" routerLink="/login" />
         </div>
       </div>
-      <div class="form-control">
-        <label class="label">
-          <span class="label-text">Last Name</span>
-        </label>
-        <input
-          type="text"
-          placeholder="Last Name"
-          class="input input-bordered"
-          formControlName="lastName"
-        />
-        <div
-          *ngIf="lastName?.invalid && (lastName?.dirty || lastName?.touched)"
-        >
-          <div *ngIf="lastName?.errors?.required">Last Name is required.</div>
-        </div>
-      </div>
-      <div class="form-control">
-        <label class="label">
-          <span class="label-text">Email</span>
-        </label>
-        <input
-          type="email"
-          placeholder="Email"
-          class="input input-bordered"
-          formControlName="email"
-        />
-        <!-- <div *ngIf="email?.invalid && (email?.dirty || email?.touched)">
-          <div *ngIf="email?.errors?.required">Email is required.</div>
-          <div *ngIf="email?.errors?.email">Please enter a valid email</div>
-        </div> -->
-      </div>
-      <div class="form-control">
-        <label class="label">
-          <span class="label-text">Password</span>
-        </label>
-        <input
-          type="password"
-          placeholder="Password"
-          class="input input-bordered"
-          formControlName="password"
-        />
-      </div>
-      <div class="form-control">
-        <label class="label">
-          <span class="label-text">Confirm Password</span>
-        </label>
-        <input
-          type="password"
-          placeholder="Confirm Password"
-          class="input input-bordered"
-          formControlName="confirmPassword"
-        />
-      </div>
-      <div class="form-control mt-6">
-        <input type="submit" value="Regiter" class="btn btn-primary" />
-      </div>
-      <div class="form-control mt-6">
-        <input
-          type="button"
-          value="To Login"
-          class="btn btn-primary"
-          routerLink="/login"
-        />
-      </div>
-    </div>
-  </form>
+    </form>
+  </div>
+
 </div>
