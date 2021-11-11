@@ -1,0 +1,24 @@
+<div class="flex justify-center mt-8">
+  <div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+    <div class="card-body">
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text">Enter Verification Code</span>
+        </label>
+        <input type="text" placeholder="Enter verification code" [formControl]="verificationCode"
+          class="input input-bordered" />
+        <div *ngIf="
+          verificationCode?.invalid &&
+          (verificationCode?.dirty || verificationCode?.touched)
+        ">
+          <div *ngIf="verificationCode?.errors?.required" class="text-red-500 text-xs text-center">Please enter the
+            complete verification code</div>
+          <div *ngIf="verificationCode?.errors?.email" class="text-red-500 text-xs">
+            Please enter a valid email
+          </div>
+        </div>
+      </div>
+      <button (click)="verifyUser()">Verify User</button>
+    </div>
+  </div>
+</div>

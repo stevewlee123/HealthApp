@@ -14,6 +14,16 @@
     "categories": {
       "auth": {
         "projectappacba034f": {}
+      },
+      "function": {
+        "createPost": {
+          "deploymentBucketName": "amplify-projectapp-dev-163036-deployment",
+          "s3Key": "amplify-builds/createPost-6955474a4d6e76663565-build.zip"
+        },
+        "AdminQueriesf7f5d6f6": {
+          "deploymentBucketName": "amplify-projectapp-dev-163036-deployment",
+          "s3Key": "amplify-builds/AdminQueriesf7f5d6f6-797248394a5745744b39-build.zip"
+        }
       }
     }
   }

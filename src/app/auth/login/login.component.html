@@ -9,7 +9,7 @@
       </p>
     </div>
     <div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-      <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+      <form [formGroup]="loginForm" (ngSubmit)="onLogin(email?.value, password?.value)">
         <div class="card-body">
           <div class="form-control">
             <label class="label">
