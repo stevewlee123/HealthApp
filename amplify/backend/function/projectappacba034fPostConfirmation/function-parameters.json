@@ -1,0 +1,18 @@
+{
+  "trigger": true,
+  "modules": [
+    "add-to-group"
+  ],
+  "parentResource": "projectappacba034f",
+  "functionName": "projectappacba034fPostConfirmation",
+  "resourceName": "projectappacba034fPostConfirmation",
+  "parentStack": "auth",
+  "triggerEnvs": "[]",
+  "triggerDir": "/usr/local/lib/node_modules/@aws-amplify/cli/node_modules/amplify-category-auth/provider-utils/awscloudformation/triggers/PostConfirmation",
+  "triggerTemplate": "PostConfirmation.json.ejs",
+  "triggerEventPath": "PostConfirmation.event.json",
+  "roleName": "projectappacba034fPostConfirmation",
+  "skipEdit": true,
+  "GROUP": "Patients",
+  "enableCors": false
+}

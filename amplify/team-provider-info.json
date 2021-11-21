@@ -23,6 +23,11 @@
         "AdminQueriesf7f5d6f6": {
           "deploymentBucketName": "amplify-projectapp-dev-163036-deployment",
           "s3Key": "amplify-builds/AdminQueriesf7f5d6f6-797248394a5745744b39-build.zip"
+        },
+        "projectappacba034fPostConfirmation": {
+          "GROUP": "Patients",
+          "deploymentBucketName": "amplify-projectapp-dev-163036-deployment",
+          "s3Key": "amplify-builds/projectappacba034fPostConfirmation-4144795669742f374565-build.zip"
         }
       }
     }

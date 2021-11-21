@@ -49,24 +49,36 @@
             "Arn"
         ]
     },
-    "useDefault": "manual",
+    "useDefault": "default",
     "userPoolGroupList": [
         "Patients",
         "Doctors"
     ],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,
-    "dependsOn": [],
-    "thirdPartyAuth": false,
-    "userPoolGroups": true,
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "projectappacba034fPostConfirmation",
+            "triggerProvider": "Cognito",
+            "attributes": [
+                "Arn",
+                "Name"
+            ]
+        }
+    ],
+    "userPoolGroups": false,
     "adminQueries": true,
-    "triggers": "{}",
+    "triggers": "{\n  \"PostConfirmation\": [\n    \"add-to-group\"\n  ]\n}",
     "hostedUI": false,
-    "adminQueryGroup": "Admin",
+    "adminQueryGroup": "Doctors",
     "parentStack": {
         "Ref": "AWS::StackId"
     },
     "breakCircularDependency": true,
-    "permissions": [],
+    "permissions": [
+        "{\n  \"policyName\": \"AddToGroupCognito\",\n  \"trigger\": \"PostConfirmation\",\n  \"effect\": \"Allow\",\n  \"actions\": [\n    \"cognito-idp:AdminAddUserToGroup\",\n    \"cognito-idp:GetGroup\",\n    \"cognito-idp:CreateGroup\"\n  ],\n  \"resource\": {\n    \"paramType\": \"!GetAtt\",\n    \"keys\": [\n      \"UserPool\",\n      \"Arn\"\n    ]\n  }\n}"
+    ],
+    "authTriggerConnections": "[\n  {\n    \"triggerType\": \"PostConfirmation\",\n    \"lambdaFunctionName\": \"projectappacba034fPostConfirmation\"\n  }\n]",
     "authProviders": []
 }

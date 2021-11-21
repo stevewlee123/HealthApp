@@ -10,7 +10,7 @@ export class AuthService {
 
     signUp(registerUser: RegisterInput) {
         return Auth.signUp({
-            username: registerUser.email,
+            username: registerUser.username,
             password: registerUser.password,
             attributes: {
                 email: registerUser.email, // optional

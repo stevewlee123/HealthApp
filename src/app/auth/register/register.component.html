@@ -22,6 +22,15 @@
         </div>
         <div class="form-control">
           <label class="label">
+            <span class="label-text">Username</span>
+          </label>
+          <input type="text" placeholder="Username" class="input input-bordered" formControlName="username" />
+          <div *ngIf="username?.invalid && (username?.dirty || username?.touched)">
+            <div class="text-red-500 text-xs" *ngIf="username?.errors?.required">Username is required.</div>
+          </div>
+        </div>
+        <div class="form-control">
+          <label class="label">
             <span class="label-text">Email</span>
           </label>
           <input type="email" placeholder="Email" class="input input-bordered" formControlName="email" />

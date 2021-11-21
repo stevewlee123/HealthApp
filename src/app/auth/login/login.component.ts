@@ -11,12 +11,12 @@ import { AuthService } from '../auth.service';
 })
 export class LoginComponent implements OnInit {
   loginForm = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
+    username: new FormControl('', [Validators.required]),
     password: new FormControl(''),
   });
 
-  get email() {
-    return this.loginForm.get('email');
+  get username() {
+    return this.loginForm.get('username');
   }
 
   get password() {
@@ -27,8 +27,8 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  onLogin(email: string, password: string) {
-    from(this.auth.signIn(email, password)).subscribe(
+  onLogin(username: string, password: string) {
+    from(this.auth.signIn(username, password)).subscribe(
       (user) => {
         console.log(user);
         this.router.navigate(['/']);
@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
         console.error(err);
         if (err.code === 'UserNotConfirmedException') {
           this.router.navigate(['/confirmUser'], {
-            queryParams: { username: email },
+            queryParams: { username: username },
           });
         }
       }

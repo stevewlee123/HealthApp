@@ -9,16 +9,15 @@
       </p>
     </div>
     <div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-      <form [formGroup]="loginForm" (ngSubmit)="onLogin(email?.value, password?.value)">
+      <form [formGroup]="loginForm" (ngSubmit)="onLogin(username?.value, password?.value)">
         <div class="card-body">
           <div class="form-control">
             <label class="label">
-              <span class="label-text">Email</span>
+              <span class="label-text">Username</span>
             </label>
-            <input type="email" placeholder="email" class="input input-bordered" formControlName="email" />
-            <div *ngIf="email?.invalid && (email?.dirty || email?.touched)">
-              <div class="text-red-500 text-xs"  *ngIf="email?.errors?.required">Email is required.</div>
-              <div class="text-red-500 text-xs"  *ngIf="email?.errors?.email">Please enter a valid email</div>
+            <input type="text" placeholder="Username" class="input input-bordered" formControlName="username" />
+            <div *ngIf="username?.invalid && (username?.dirty || username?.touched)">
+              <div class="text-red-500 text-xs"  *ngIf="username?.errors?.required">Username is required.</div>
             </div>
           </div>
           <div class="form-control">

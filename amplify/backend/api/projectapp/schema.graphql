@@ -7,3 +7,9 @@ type Post @model {
   lat: Float
   long: Float
 }
+
+type VideoCall @model {
+  id: ID!
+  attendeeIds : [String]
+  time: AWSDateTime
+}
