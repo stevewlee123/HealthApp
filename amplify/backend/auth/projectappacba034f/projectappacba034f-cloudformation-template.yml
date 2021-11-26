@@ -10,18 +10,6 @@ Parameters:
     Type: String
 
   
-  
-  
-  functionprojectappacba034fPostConfirmationArn:
-    Type: String
-    Default: functionprojectappacba034fPostConfirmationArn
-  
-  functionprojectappacba034fPostConfirmationName:
-    Type: String
-    Default: functionprojectappacba034fPostConfirmationName
-  
-  
-  
 
     
   identityPoolName:
@@ -178,14 +166,14 @@ Parameters:
   permissions:
     Type: CommaDelimitedList
       
-  authTriggerConnections:
-    Type: String
-  
-            
         
   authProviders:
     Type: CommaDelimitedList
       
+  
+  thirdPartyAuth:
+    Type: String
+            
 Conditions:
   ShouldNotCreateEnvResources: !Equals [ !Ref env, NONE ]
   

@@ -1,14 +1,15 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { AuthGuard } from './auth/auth.guard';
-import { ConfirmUserComponent } from './auth/confirm-user/confirm-user.component';
-import { LoginComponent } from './auth/login/login.component';
-import { RegisterComponent } from './auth/register/register.component';
-import { HomeLayoutComponent } from './layouts/home-layout/home-layout.component';
-import { LoginLayoutComponent } from './layouts/login-layout/login-layout.component';
-import { HomeComponent } from './pages/home/home.component';
-import { ScheduleComponent } from './pages/schedule/schedule.component';
-import { VideoChatComponent } from './pages/video-chat/video-chat.component';
+import { NgModule } from '@angular/core'
+import { RouterModule, Routes } from '@angular/router'
+import { AuthGuard } from './auth/auth.guard'
+import { ConfirmUserComponent } from './auth/confirm-user/confirm-user.component'
+import { LoginComponent } from './auth/login/login.component'
+import { RegisterComponent } from './auth/register/register.component'
+import { HomeLayoutComponent } from './layouts/home-layout/home-layout.component'
+import { LoginLayoutComponent } from './layouts/login-layout/login-layout.component'
+import { DoctorListComponent } from './pages/doctor-list/doctor-list.component'
+import { HomeComponent } from './pages/home/home.component'
+import { ScheduleComponent } from './pages/schedule/schedule.component'
+import { VideoChatComponent } from './pages/video-chat/video-chat.component'
 
 const routes: Routes = [
     {
@@ -25,9 +26,12 @@ const routes: Routes = [
                 component: VideoChatComponent
             },
             {
-              path: 'schedule',
-              component: ScheduleComponent
-
+                path: 'schedule/:id',
+                component: ScheduleComponent
+            },
+            {
+              path: 'doctors',
+              component: DoctorListComponent
             }
         ]
     },
@@ -43,7 +47,7 @@ const routes: Routes = [
             { path: 'confirmUser', component: ConfirmUserComponent }
         ]
     }
-];
+]
 @NgModule({
     imports: [RouterModule.forRoot(routes)],
     exports: [RouterModule]

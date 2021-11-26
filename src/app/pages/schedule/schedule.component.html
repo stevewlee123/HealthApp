@@ -1,32 +1,82 @@
-<div class="row text-center">
+<div class="col-md-4">
+  <div class="btn-group">
+    <div class="btn btn-primary" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate" (click)="fetchEvents()">
+      Previous
+    </div>
+    <div class="btn btn-outline-secondary" mwlCalendarToday [(viewDate)]="viewDate" (click)="fetchEvents()">
+      Today
+    </div>
+    <div class="btn btn-primary" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate" (click)="fetchEvents()">
+      Next
+    </div>
+  </div>
   <div class="col-md-4">
-    <div class="btn-group">
-      <div class="btn btn-primary" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate"
-        (click)="fetchEvents()">
-        Previous
-      </div>
-      <div class="btn btn-outline-secondary" mwlCalendarToday [(viewDate)]="viewDate" (click)="fetchEvents()">
-        Today
-      </div>
-      <div class="btn btn-primary" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate" (click)="fetchEvents()">
-        Next
-      </div>
-    </div>
-    <div class="col-md-4">
-      <h3>{{ viewDate | calendarDate: view + 'ViewTitle':'en' }}</h3>
+    <h3>{{ viewDate | calendarDate: view + 'ViewTitle':'en' }}</h3>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="text-center">
+    <i class="fas fa-spin fa-spinner fa-5x"></i> <br />
+    Loading events...
+  </div>
+</ng-template>
+
+<div *ngIf="events$ | async; else loading; let events">
+  <mwl-calendar-month-view [viewDate]="viewDate" [events]="events" [activeDayIsOpen]="activeDayIsOpen"
+    (dayClicked)="dayClicked($event.day)" (eventClicked)="eventClicked($event.event)">
+  </mwl-calendar-month-view>
+
+</div>
+<label *ngIf="clickedDate" for="my-modal-2" class="btn btn-primary modal-button">Request Appointment on {{ clickedDate!
+  | date:
+  'mediumDate'}}</label>
+<input type="checkbox" id="my-modal-2" class="modal-toggle">
+<div class="modal">
+  <div class="modal-box">
+    <select class="select select-bordered w-full max-w-xs" [(ngModel)]="newEventTimeSlot">
+      <option disabled="disabled" selected="selected" value="default">Choose Appointment Time</option>
+      <option *ngFor="let slot of timeSlots;">{{slot}} </option>
+    </select>
+
+    <div class="modal-action">
+      <label for="my-modal-2" class="btn btn-primary" (click)="requestEvent()">Accept</label>
+      <label for="my-modal-2" class="btn">Close</label>
     </div>
   </div>
+</div>
 
-  <ng-template #loading>
-    <div class="text-center">
-      <i class="fas fa-spin fa-spinner fa-5x"></i> <br />
-      Loading events...
-    </div>
-  </ng-template>
+<div>
 
-  <div *ngIf="events$ | async; else loading; let events">
-    <mwl-calendar-month-view [viewDate]="viewDate" [events]="events" [activeDayIsOpen]="activeDayIsOpen"
-      (dayClicked)="dayClicked($event.day)" (eventClicked)="eventClicked($event.event)">
-    </mwl-calendar-month-view>
+</div>
 
-  </div>
+<!-- <div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+    <form [formGroup]="loginForm" (ngSubmit)="onLogin(username?.value, password?.value)">
+      <div class="card-body">
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Username</span>
+          </label>
+          <input type="text" placeholder="Username" class="input input-bordered" formControlName="username" />
+          <div *ngIf="username?.invalid && (username?.dirty || username?.touched)">
+            <div class="text-red-500 text-xs" *ngIf="username?.errors?.required">Username is required.</div>
+          </div>
+        </div>
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Password</span>
+          </label>
+          <input type="password" placeholder="password" class="input input-bordered" formControlName="password" />
+          <label class="label">
+            <a href="#" class="label-text-alt">Forgot password?</a>
+          </label>
+        </div>
+        <div class="form-control mt-6">
+          <input type="submit" value="Login" class="btn btn-primary" />
+        </div>
+        <div class="form-control mt-6">
+          <input type="button" value="Register" class="btn btn-primary" routerLink="/register" />
+        </div>
+      </div>
+    </form>
+  </div> -->

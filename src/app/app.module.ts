@@ -17,6 +17,9 @@ import { CalendarModule, DateAdapter } from 'angular-calendar'
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { ScheduleComponent } from './pages/schedule/schedule.component'
 import { CommonModule } from '@angular/common'
+import { FlatpickrModule } from 'angularx-flatpickr';
+import { DoctorListComponent } from './pages/doctor-list/doctor-list.component';
+import {HttpClientModule} from '@angular/common/http';
 
 @NgModule({
     declarations: [
@@ -29,15 +32,18 @@ import { CommonModule } from '@angular/common'
         ConfirmUserComponent,
         NavbarComponent,
         VideoChatComponent,
-        ScheduleComponent
+        ScheduleComponent,
+        DoctorListComponent
     ],
     imports: [
         BrowserModule,
+        HttpClientModule,
         AppRoutingModule,
         ReactiveFormsModule,
         FormsModule,
         CommonModule,
         BrowserAnimationsModule,
+        FlatpickrModule.forRoot(),
         CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory })
     ],
     providers: [],

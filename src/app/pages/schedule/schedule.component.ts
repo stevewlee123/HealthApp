@@ -1,7 +1,12 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core'
-import { HttpClient, HttpParams } from '@angular/common/http'
+import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core'
+
 import { map } from 'rxjs/operators'
-import { CalendarEvent, CalendarEventTitleFormatter, CalendarView } from 'angular-calendar'
+import { v4 as uuidv4 } from 'uuid'
+import {
+    CalendarEvent,
+    CalendarEventTitleFormatter,
+    CalendarView
+} from 'angular-calendar'
 import {
     isSameMonth,
     isSameDay,
@@ -13,36 +18,57 @@ import {
     endOfDay,
     format
 } from 'date-fns'
-import { from, Observable } from 'rxjs'
-import { APIService, VideoCall } from 'src/app/API.service'
-import { Router } from '@angular/router'
+import { from, Observable, Subject } from 'rxjs'
+import { APIService, CallStatus, VideoCall } from 'src/app/API.service'
+import { ActivatedRoute, Router } from '@angular/router'
 import { CustomEventTitleFormatter } from './ custom-event-title-formatter.provider'
+import { FormControl, FormGroup, Validators } from '@angular/forms'
+import Auth from '@aws-amplify/auth'
+import { HttpClient } from '@angular/common/http'
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: 'schedule.component.html',
     providers: [
-      {
-        provide: CalendarEventTitleFormatter,
-        useClass: CustomEventTitleFormatter,
-      },
-    ],
+        {
+            provide: CalendarEventTitleFormatter,
+            useClass: CustomEventTitleFormatter
+        }
+    ]
 })
 export class ScheduleComponent implements OnInit {
+    doctorId?: string
+    doctorEmail?: string
+    newEventTimeSlot?: string = 'default'
+    timeSlots = ['08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30']
     view: CalendarView = CalendarView.Month
+
+    newEventTime?: Date
+
+    refresh: Subject<any> = new Subject()
 
     //events: CalendarEvent<{ call: VideoCall }>[] = []
 
     viewDate: Date = new Date()
 
+    clickedDate?: Date
+
     events$?: Observable<CalendarEvent<{ call: VideoCall }>[]>
 
     activeDayIsOpen: boolean = false
 
-    constructor(private api: APIService, private router: Router) {}
+    constructor(
+        private api: APIService,
+        private router: Router,
+        private route: ActivatedRoute,
+        private http: HttpClient
+    ) {}
 
     async ngOnInit() {
         await this.fetchEvents()
+        this.doctorId = this.route.snapshot.paramMap.get('id') || ''
+        this.doctorEmail = (await this.api.GetUser(this.doctorId!)).email!
+        console.log(this.doctorEmail)
     }
 
     /*
@@ -99,7 +125,13 @@ export class ScheduleComponent implements OnInit {
         events: CalendarEvent<{ call: VideoCall }>[]
     }): void {
         console.log(date, events)
-        console.log("This viewDate", this.viewDate)
+        console.log('This viewDate', this.viewDate)
+        this.clickedDate = date
+        console.log(
+            'Clicked Date',
+            this.clickedDate.toISOString(),
+            this.clickedDate.toTimeString()
+        )
         if (isSameMonth(date, this.viewDate)) {
             if (
                 (isSameDay(this.viewDate, date) && this.activeDayIsOpen === true) ||
@@ -116,5 +148,35 @@ export class ScheduleComponent implements OnInit {
     eventClicked(event: CalendarEvent<{ call: VideoCall }>): void {
         console.log(event)
         this.router.navigate(['/call', event.meta?.call.id])
+    }
+
+    async requestEvent() {
+        console.log(this.clickedDate?.toString(), this.newEventTimeSlot)
+
+        const eventTime = new Date(
+            this.clickedDate?.toString().substring(0, 16)! +
+                this.newEventTimeSlot! +
+                this.clickedDate?.toString().substring(21)!
+        )
+
+        const userId = (await Auth.currentAuthenticatedUser()).attributes.sub
+        console.log(userId)
+        const attendees = [this.doctorId, userId]
+        const args = {
+            id: uuidv4(),
+            time: eventTime.toISOString(),
+            attendeeIds: attendees,
+            email: this.doctorEmail,
+            status: CallStatus.requested
+        }
+
+        this.http
+            .post(
+                'https://jkt8mfvus4.execute-api.us-east-1.amazonaws.com/dev/requestCall',
+                JSON.stringify(args)
+            )
+            .subscribe((response) => console.log(response))
+
+        //await ( this.api.CreateVideoCall()
     }
 }

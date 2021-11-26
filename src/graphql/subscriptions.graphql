@@ -43,6 +43,7 @@ subscription OnCreateVideoCall {
     id
     attendeeIds
     time
+    status
     createdAt
     updatedAt
   }
@@ -52,6 +53,7 @@ subscription OnUpdateVideoCall {
     id
     attendeeIds
     time
+    status
     createdAt
     updatedAt
   }
@@ -61,6 +63,40 @@ subscription OnDeleteVideoCall {
     id
     attendeeIds
     time
+    status
+    createdAt
+    updatedAt
+  }
+}
+subscription OnCreateUser {
+  onCreateUser {
+    id
+    firstName
+    lastName
+    email
+    type
+    createdAt
+    updatedAt
+  }
+}
+subscription OnUpdateUser {
+  onUpdateUser {
+    id
+    firstName
+    lastName
+    email
+    type
+    createdAt
+    updatedAt
+  }
+}
+subscription OnDeleteUser {
+  onDeleteUser {
+    id
+    firstName
+    lastName
+    email
+    type
     createdAt
     updatedAt
   }

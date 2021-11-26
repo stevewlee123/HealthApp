@@ -12,4 +12,23 @@ type VideoCall @model {
   id: ID!
   attendeeIds : [String]
   time: AWSDateTime
+  status: CallStatus
+}
+
+type User @model {
+  id: ID!
+  firstName: String
+  lastName: String
+  email: String
+  type: UserType
+}
+
+enum UserType {
+  doctor
+  patient
+}
+
+enum CallStatus {
+  requested
+  approved
 }

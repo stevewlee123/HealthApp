@@ -1,0 +1,35 @@
+{
+  "paths": [
+    {
+      "name": "/requestCall",
+      "lambdaFunction": "requestAppointment",
+      "privacy": {
+        "open": true
+      },
+      "policyResourceName": "/requestCall"
+    }
+  ],
+  "resourceName": "videoCall",
+  "apiName": "videoCall",
+  "functionArns": [
+    {
+      "lambdaFunction": "requestAppointment"
+    }
+  ],
+  "privacy": {
+    "auth": 0,
+    "unauth": 0,
+    "authRoleName": "amplify-projectapp-dev-163036-authRole",
+    "unAuthRoleName": "amplify-projectapp-dev-163036-unauthRole"
+  },
+  "dependsOn": [
+    {
+      "category": "function",
+      "resourceName": "requestAppointment",
+      "attributes": [
+        "Name",
+        "Arn"
+      ]
+    }
+  ]
+}

@@ -37,6 +37,7 @@ query GetVideoCall($id: ID!) {
     id
     attendeeIds
     time
+    status
     createdAt
     updatedAt
   }
@@ -51,6 +52,36 @@ query ListVideoCalls(
       id
       attendeeIds
       time
+      status
+      createdAt
+      updatedAt
+    }
+    nextToken
+  }
+}
+query GetUser($id: ID!) {
+  getUser(id: $id) {
+    id
+    firstName
+    lastName
+    email
+    type
+    createdAt
+    updatedAt
+  }
+}
+query ListUsers(
+  $filter: ModelUserFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      firstName
+      lastName
+      email
+      type
       createdAt
       updatedAt
     }

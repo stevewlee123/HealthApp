@@ -16,6 +16,9 @@ export type __SubscriptionContainer = {
   onCreateVideoCall: OnCreateVideoCallSubscription;
   onUpdateVideoCall: OnUpdateVideoCallSubscription;
   onDeleteVideoCall: OnDeleteVideoCallSubscription;
+  onCreateUser: OnCreateUserSubscription;
+  onUpdateUser: OnUpdateUserSubscription;
+  onDeleteUser: OnDeleteUserSubscription;
 };
 
 export type CreatePostInput = {
@@ -122,14 +125,26 @@ export type CreateVideoCallInput = {
   id?: string | null;
   attendeeIds?: Array<string | null> | null;
   time?: string | null;
+  status?: CallStatus | null;
 };
+
+export enum CallStatus {
+  requested = "requested",
+  approved = "approved"
+}
 
 export type ModelVideoCallConditionInput = {
   attendeeIds?: ModelStringInput | null;
   time?: ModelStringInput | null;
+  status?: ModelCallStatusInput | null;
   and?: Array<ModelVideoCallConditionInput | null> | null;
   or?: Array<ModelVideoCallConditionInput | null> | null;
   not?: ModelVideoCallConditionInput | null;
+};
+
+export type ModelCallStatusInput = {
+  eq?: CallStatus | null;
+  ne?: CallStatus | null;
 };
 
 export type VideoCall = {
@@ -137,6 +152,7 @@ export type VideoCall = {
   id: string;
   attendeeIds?: Array<string | null> | null;
   time?: string | null;
+  status?: CallStatus | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -145,9 +161,61 @@ export type UpdateVideoCallInput = {
   id: string;
   attendeeIds?: Array<string | null> | null;
   time?: string | null;
+  status?: CallStatus | null;
 };
 
 export type DeleteVideoCallInput = {
+  id: string;
+};
+
+export type CreateUserInput = {
+  id?: string | null;
+  firstName?: string | null;
+  lastName?: string | null;
+  email?: string | null;
+  type?: UserType | null;
+};
+
+export enum UserType {
+  doctor = "doctor",
+  patient = "patient"
+}
+
+export type ModelUserConditionInput = {
+  firstName?: ModelStringInput | null;
+  lastName?: ModelStringInput | null;
+  email?: ModelStringInput | null;
+  type?: ModelUserTypeInput | null;
+  and?: Array<ModelUserConditionInput | null> | null;
+  or?: Array<ModelUserConditionInput | null> | null;
+  not?: ModelUserConditionInput | null;
+};
+
+export type ModelUserTypeInput = {
+  eq?: UserType | null;
+  ne?: UserType | null;
+};
+
+export type User = {
+  __typename: "User";
+  id: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  email?: string | null;
+  type?: UserType | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type UpdateUserInput = {
+  id: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  email?: string | null;
+  type?: UserType | null;
+};
+
+export type DeleteUserInput = {
   id: string;
 };
 
@@ -190,6 +258,7 @@ export type ModelVideoCallFilterInput = {
   id?: ModelIDInput | null;
   attendeeIds?: ModelStringInput | null;
   time?: ModelStringInput | null;
+  status?: ModelCallStatusInput | null;
   and?: Array<ModelVideoCallFilterInput | null> | null;
   or?: Array<ModelVideoCallFilterInput | null> | null;
   not?: ModelVideoCallFilterInput | null;
@@ -198,6 +267,23 @@ export type ModelVideoCallFilterInput = {
 export type ModelVideoCallConnection = {
   __typename: "ModelVideoCallConnection";
   items?: Array<VideoCall | null> | null;
+  nextToken?: string | null;
+};
+
+export type ModelUserFilterInput = {
+  id?: ModelIDInput | null;
+  firstName?: ModelStringInput | null;
+  lastName?: ModelStringInput | null;
+  email?: ModelStringInput | null;
+  type?: ModelUserTypeInput | null;
+  and?: Array<ModelUserFilterInput | null> | null;
+  or?: Array<ModelUserFilterInput | null> | null;
+  not?: ModelUserFilterInput | null;
+};
+
+export type ModelUserConnection = {
+  __typename: "ModelUserConnection";
+  items?: Array<User | null> | null;
   nextToken?: string | null;
 };
 
@@ -245,6 +331,7 @@ export type CreateVideoCallMutation = {
   id: string;
   attendeeIds?: Array<string | null> | null;
   time?: string | null;
+  status?: CallStatus | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -254,6 +341,7 @@ export type UpdateVideoCallMutation = {
   id: string;
   attendeeIds?: Array<string | null> | null;
   time?: string | null;
+  status?: CallStatus | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -263,6 +351,40 @@ export type DeleteVideoCallMutation = {
   id: string;
   attendeeIds?: Array<string | null> | null;
   time?: string | null;
+  status?: CallStatus | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type CreateUserMutation = {
+  __typename: "User";
+  id: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  email?: string | null;
+  type?: UserType | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type UpdateUserMutation = {
+  __typename: "User";
+  id: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  email?: string | null;
+  type?: UserType | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type DeleteUserMutation = {
+  __typename: "User";
+  id: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  email?: string | null;
+  type?: UserType | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -302,6 +424,7 @@ export type GetVideoCallQuery = {
   id: string;
   attendeeIds?: Array<string | null> | null;
   time?: string | null;
+  status?: CallStatus | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -313,6 +436,33 @@ export type ListVideoCallsQuery = {
     id: string;
     attendeeIds?: Array<string | null> | null;
     time?: string | null;
+    status?: CallStatus | null;
+    createdAt: string;
+    updatedAt: string;
+  } | null> | null;
+  nextToken?: string | null;
+};
+
+export type GetUserQuery = {
+  __typename: "User";
+  id: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  email?: string | null;
+  type?: UserType | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type ListUsersQuery = {
+  __typename: "ModelUserConnection";
+  items?: Array<{
+    __typename: "User";
+    id: string;
+    firstName?: string | null;
+    lastName?: string | null;
+    email?: string | null;
+    type?: UserType | null;
     createdAt: string;
     updatedAt: string;
   } | null> | null;
@@ -363,6 +513,7 @@ export type OnCreateVideoCallSubscription = {
   id: string;
   attendeeIds?: Array<string | null> | null;
   time?: string | null;
+  status?: CallStatus | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -372,6 +523,7 @@ export type OnUpdateVideoCallSubscription = {
   id: string;
   attendeeIds?: Array<string | null> | null;
   time?: string | null;
+  status?: CallStatus | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -381,6 +533,40 @@ export type OnDeleteVideoCallSubscription = {
   id: string;
   attendeeIds?: Array<string | null> | null;
   time?: string | null;
+  status?: CallStatus | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type OnCreateUserSubscription = {
+  __typename: "User";
+  id: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  email?: string | null;
+  type?: UserType | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type OnUpdateUserSubscription = {
+  __typename: "User";
+  id: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  email?: string | null;
+  type?: UserType | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type OnDeleteUserSubscription = {
+  __typename: "User";
+  id: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  email?: string | null;
+  type?: UserType | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -486,6 +672,7 @@ export class APIService {
           id
           attendeeIds
           time
+          status
           createdAt
           updatedAt
         }
@@ -511,6 +698,7 @@ export class APIService {
           id
           attendeeIds
           time
+          status
           createdAt
           updatedAt
         }
@@ -536,6 +724,7 @@ export class APIService {
           id
           attendeeIds
           time
+          status
           createdAt
           updatedAt
         }
@@ -550,6 +739,87 @@ export class APIService {
       graphqlOperation(statement, gqlAPIServiceArguments)
     )) as any;
     return <DeleteVideoCallMutation>response.data.deleteVideoCall;
+  }
+  async CreateUser(
+    input: CreateUserInput,
+    condition?: ModelUserConditionInput
+  ): Promise<CreateUserMutation> {
+    const statement = `mutation CreateUser($input: CreateUserInput!, $condition: ModelUserConditionInput) {
+        createUser(input: $input, condition: $condition) {
+          __typename
+          id
+          firstName
+          lastName
+          email
+          type
+          createdAt
+          updatedAt
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {
+      input
+    };
+    if (condition) {
+      gqlAPIServiceArguments.condition = condition;
+    }
+    const response = (await API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    )) as any;
+    return <CreateUserMutation>response.data.createUser;
+  }
+  async UpdateUser(
+    input: UpdateUserInput,
+    condition?: ModelUserConditionInput
+  ): Promise<UpdateUserMutation> {
+    const statement = `mutation UpdateUser($input: UpdateUserInput!, $condition: ModelUserConditionInput) {
+        updateUser(input: $input, condition: $condition) {
+          __typename
+          id
+          firstName
+          lastName
+          email
+          type
+          createdAt
+          updatedAt
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {
+      input
+    };
+    if (condition) {
+      gqlAPIServiceArguments.condition = condition;
+    }
+    const response = (await API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    )) as any;
+    return <UpdateUserMutation>response.data.updateUser;
+  }
+  async DeleteUser(
+    input: DeleteUserInput,
+    condition?: ModelUserConditionInput
+  ): Promise<DeleteUserMutation> {
+    const statement = `mutation DeleteUser($input: DeleteUserInput!, $condition: ModelUserConditionInput) {
+        deleteUser(input: $input, condition: $condition) {
+          __typename
+          id
+          firstName
+          lastName
+          email
+          type
+          createdAt
+          updatedAt
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {
+      input
+    };
+    if (condition) {
+      gqlAPIServiceArguments.condition = condition;
+    }
+    const response = (await API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    )) as any;
+    return <DeleteUserMutation>response.data.deleteUser;
   }
   async GetPost(id: string): Promise<GetPostQuery> {
     const statement = `query GetPost($id: ID!) {
@@ -619,6 +889,7 @@ export class APIService {
           id
           attendeeIds
           time
+          status
           createdAt
           updatedAt
         }
@@ -644,6 +915,7 @@ export class APIService {
             id
             attendeeIds
             time
+            status
             createdAt
             updatedAt
           }
@@ -664,6 +936,63 @@ export class APIService {
       graphqlOperation(statement, gqlAPIServiceArguments)
     )) as any;
     return <ListVideoCallsQuery>response.data.listVideoCalls;
+  }
+  async GetUser(id: string): Promise<GetUserQuery> {
+    const statement = `query GetUser($id: ID!) {
+        getUser(id: $id) {
+          __typename
+          id
+          firstName
+          lastName
+          email
+          type
+          createdAt
+          updatedAt
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {
+      id
+    };
+    const response = (await API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    )) as any;
+    return <GetUserQuery>response.data.getUser;
+  }
+  async ListUsers(
+    filter?: ModelUserFilterInput,
+    limit?: number,
+    nextToken?: string
+  ): Promise<ListUsersQuery> {
+    const statement = `query ListUsers($filter: ModelUserFilterInput, $limit: Int, $nextToken: String) {
+        listUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+          __typename
+          items {
+            __typename
+            id
+            firstName
+            lastName
+            email
+            type
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {};
+    if (filter) {
+      gqlAPIServiceArguments.filter = filter;
+    }
+    if (limit) {
+      gqlAPIServiceArguments.limit = limit;
+    }
+    if (nextToken) {
+      gqlAPIServiceArguments.nextToken = nextToken;
+    }
+    const response = (await API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    )) as any;
+    return <ListUsersQuery>response.data.listUsers;
   }
   OnCreatePostListener: Observable<
     SubscriptionResponse<Pick<__SubscriptionContainer, "onCreatePost">>
@@ -744,6 +1073,7 @@ export class APIService {
           id
           attendeeIds
           time
+          status
           createdAt
           updatedAt
         }
@@ -763,6 +1093,7 @@ export class APIService {
           id
           attendeeIds
           time
+          status
           createdAt
           updatedAt
         }
@@ -782,6 +1113,7 @@ export class APIService {
           id
           attendeeIds
           time
+          status
           createdAt
           updatedAt
         }
@@ -789,5 +1121,68 @@ export class APIService {
     )
   ) as Observable<
     SubscriptionResponse<Pick<__SubscriptionContainer, "onDeleteVideoCall">>
+  >;
+
+  OnCreateUserListener: Observable<
+    SubscriptionResponse<Pick<__SubscriptionContainer, "onCreateUser">>
+  > = API.graphql(
+    graphqlOperation(
+      `subscription OnCreateUser {
+        onCreateUser {
+          __typename
+          id
+          firstName
+          lastName
+          email
+          type
+          createdAt
+          updatedAt
+        }
+      }`
+    )
+  ) as Observable<
+    SubscriptionResponse<Pick<__SubscriptionContainer, "onCreateUser">>
+  >;
+
+  OnUpdateUserListener: Observable<
+    SubscriptionResponse<Pick<__SubscriptionContainer, "onUpdateUser">>
+  > = API.graphql(
+    graphqlOperation(
+      `subscription OnUpdateUser {
+        onUpdateUser {
+          __typename
+          id
+          firstName
+          lastName
+          email
+          type
+          createdAt
+          updatedAt
+        }
+      }`
+    )
+  ) as Observable<
+    SubscriptionResponse<Pick<__SubscriptionContainer, "onUpdateUser">>
+  >;
+
+  OnDeleteUserListener: Observable<
+    SubscriptionResponse<Pick<__SubscriptionContainer, "onDeleteUser">>
+  > = API.graphql(
+    graphqlOperation(
+      `subscription OnDeleteUser {
+        onDeleteUser {
+          __typename
+          id
+          firstName
+          lastName
+          email
+          type
+          createdAt
+          updatedAt
+        }
+      }`
+    )
+  ) as Observable<
+    SubscriptionResponse<Pick<__SubscriptionContainer, "onDeleteUser">>
   >;
 }
