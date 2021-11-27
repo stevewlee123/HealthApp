@@ -95,13 +95,16 @@ export class ScheduleComponent implements OnInit {
                 time: {
                     gt: getStart(this.viewDate).toISOString(),
                     lt: getEnd(this.viewDate).toISOString()
+                },
+                status: {
+                  eq: CallStatus.approved
                 }
             })
         ).pipe(
             map((calls) => {
                 return calls.items!.map((call) => {
                     return {
-                        title: 'test',
+                        title: call.title,
                         start: new Date(call?.time!),
                         color: {
                             primary: '#e3bc08',
@@ -158,8 +161,8 @@ export class ScheduleComponent implements OnInit {
                 this.newEventTimeSlot! +
                 this.clickedDate?.toString().substring(21)!
         )
-
-        const userId = (await Auth.currentAuthenticatedUser()).attributes.sub
+        const user = (await Auth.currentAuthenticatedUser())
+        const userId = user.attributes.sub
         console.log(userId)
         const attendees = [this.doctorId, userId]
         const args = {
@@ -167,7 +170,8 @@ export class ScheduleComponent implements OnInit {
             time: eventTime.toISOString(),
             attendeeIds: attendees,
             email: this.doctorEmail,
-            status: CallStatus.requested
+            status: CallStatus.requested,
+            title: `Appointment with ${user.attributes.given_name} ${user.attributes.family_name}`
         }
 
         this.http
@@ -176,7 +180,5 @@ export class ScheduleComponent implements OnInit {
                 JSON.stringify(args)
             )
             .subscribe((response) => console.log(response))
-
-        //await ( this.api.CreateVideoCall()
     }
 }

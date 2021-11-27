@@ -42,8 +42,37 @@ subscription OnCreateVideoCall {
   onCreateVideoCall {
     id
     attendeeIds
+    title
     time
     status
+    attendees {
+      items {
+        id
+        videoCallID
+        userID
+        videoCall {
+          id
+          attendeeIds
+          title
+          time
+          status
+          createdAt
+          updatedAt
+        }
+        user {
+          id
+          firstName
+          lastName
+          email
+          type
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
     createdAt
     updatedAt
   }
@@ -52,8 +81,37 @@ subscription OnUpdateVideoCall {
   onUpdateVideoCall {
     id
     attendeeIds
+    title
     time
     status
+    attendees {
+      items {
+        id
+        videoCallID
+        userID
+        videoCall {
+          id
+          attendeeIds
+          title
+          time
+          status
+          createdAt
+          updatedAt
+        }
+        user {
+          id
+          firstName
+          lastName
+          email
+          type
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
     createdAt
     updatedAt
   }
@@ -62,8 +120,37 @@ subscription OnDeleteVideoCall {
   onDeleteVideoCall {
     id
     attendeeIds
+    title
     time
     status
+    attendees {
+      items {
+        id
+        videoCallID
+        userID
+        videoCall {
+          id
+          attendeeIds
+          title
+          time
+          status
+          createdAt
+          updatedAt
+        }
+        user {
+          id
+          firstName
+          lastName
+          email
+          type
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
     createdAt
     updatedAt
   }
@@ -75,6 +162,34 @@ subscription OnCreateUser {
     lastName
     email
     type
+    videoCalls {
+      items {
+        id
+        videoCallID
+        userID
+        videoCall {
+          id
+          attendeeIds
+          title
+          time
+          status
+          createdAt
+          updatedAt
+        }
+        user {
+          id
+          firstName
+          lastName
+          email
+          type
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
     createdAt
     updatedAt
   }
@@ -86,6 +201,34 @@ subscription OnUpdateUser {
     lastName
     email
     type
+    videoCalls {
+      items {
+        id
+        videoCallID
+        userID
+        videoCall {
+          id
+          attendeeIds
+          title
+          time
+          status
+          createdAt
+          updatedAt
+        }
+        user {
+          id
+          firstName
+          lastName
+          email
+          type
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
     createdAt
     updatedAt
   }
@@ -97,6 +240,175 @@ subscription OnDeleteUser {
     lastName
     email
     type
+    videoCalls {
+      items {
+        id
+        videoCallID
+        userID
+        videoCall {
+          id
+          attendeeIds
+          title
+          time
+          status
+          createdAt
+          updatedAt
+        }
+        user {
+          id
+          firstName
+          lastName
+          email
+          type
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+    createdAt
+    updatedAt
+  }
+}
+subscription OnCreateCallAttendees {
+  onCreateCallAttendees {
+    id
+    videoCallID
+    userID
+    videoCall {
+      id
+      attendeeIds
+      title
+      time
+      status
+      attendees {
+        items {
+          id
+          videoCallID
+          userID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+    user {
+      id
+      firstName
+      lastName
+      email
+      type
+      videoCalls {
+        items {
+          id
+          videoCallID
+          userID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+    createdAt
+    updatedAt
+  }
+}
+subscription OnUpdateCallAttendees {
+  onUpdateCallAttendees {
+    id
+    videoCallID
+    userID
+    videoCall {
+      id
+      attendeeIds
+      title
+      time
+      status
+      attendees {
+        items {
+          id
+          videoCallID
+          userID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+    user {
+      id
+      firstName
+      lastName
+      email
+      type
+      videoCalls {
+        items {
+          id
+          videoCallID
+          userID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+    createdAt
+    updatedAt
+  }
+}
+subscription OnDeleteCallAttendees {
+  onDeleteCallAttendees {
+    id
+    videoCallID
+    userID
+    videoCall {
+      id
+      attendeeIds
+      title
+      time
+      status
+      attendees {
+        items {
+          id
+          videoCallID
+          userID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+    user {
+      id
+      firstName
+      lastName
+      email
+      type
+      videoCalls {
+        items {
+          id
+          videoCallID
+          userID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
     createdAt
     updatedAt
   }

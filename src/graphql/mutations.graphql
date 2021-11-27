@@ -54,8 +54,37 @@ mutation CreateVideoCall(
   createVideoCall(input: $input, condition: $condition) {
     id
     attendeeIds
+    title
     time
     status
+    attendees {
+      items {
+        id
+        videoCallID
+        userID
+        videoCall {
+          id
+          attendeeIds
+          title
+          time
+          status
+          createdAt
+          updatedAt
+        }
+        user {
+          id
+          firstName
+          lastName
+          email
+          type
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
     createdAt
     updatedAt
   }
@@ -67,8 +96,37 @@ mutation UpdateVideoCall(
   updateVideoCall(input: $input, condition: $condition) {
     id
     attendeeIds
+    title
     time
     status
+    attendees {
+      items {
+        id
+        videoCallID
+        userID
+        videoCall {
+          id
+          attendeeIds
+          title
+          time
+          status
+          createdAt
+          updatedAt
+        }
+        user {
+          id
+          firstName
+          lastName
+          email
+          type
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
     createdAt
     updatedAt
   }
@@ -80,8 +138,37 @@ mutation DeleteVideoCall(
   deleteVideoCall(input: $input, condition: $condition) {
     id
     attendeeIds
+    title
     time
     status
+    attendees {
+      items {
+        id
+        videoCallID
+        userID
+        videoCall {
+          id
+          attendeeIds
+          title
+          time
+          status
+          createdAt
+          updatedAt
+        }
+        user {
+          id
+          firstName
+          lastName
+          email
+          type
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
     createdAt
     updatedAt
   }
@@ -96,6 +183,34 @@ mutation CreateUser(
     lastName
     email
     type
+    videoCalls {
+      items {
+        id
+        videoCallID
+        userID
+        videoCall {
+          id
+          attendeeIds
+          title
+          time
+          status
+          createdAt
+          updatedAt
+        }
+        user {
+          id
+          firstName
+          lastName
+          email
+          type
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
     createdAt
     updatedAt
   }
@@ -110,6 +225,34 @@ mutation UpdateUser(
     lastName
     email
     type
+    videoCalls {
+      items {
+        id
+        videoCallID
+        userID
+        videoCall {
+          id
+          attendeeIds
+          title
+          time
+          status
+          createdAt
+          updatedAt
+        }
+        user {
+          id
+          firstName
+          lastName
+          email
+          type
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
     createdAt
     updatedAt
   }
@@ -124,6 +267,184 @@ mutation DeleteUser(
     lastName
     email
     type
+    videoCalls {
+      items {
+        id
+        videoCallID
+        userID
+        videoCall {
+          id
+          attendeeIds
+          title
+          time
+          status
+          createdAt
+          updatedAt
+        }
+        user {
+          id
+          firstName
+          lastName
+          email
+          type
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+    createdAt
+    updatedAt
+  }
+}
+mutation CreateCallAttendees(
+  $input: CreateCallAttendeesInput!
+  $condition: ModelCallAttendeesConditionInput
+) {
+  createCallAttendees(input: $input, condition: $condition) {
+    id
+    videoCallID
+    userID
+    videoCall {
+      id
+      attendeeIds
+      title
+      time
+      status
+      attendees {
+        items {
+          id
+          videoCallID
+          userID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+    user {
+      id
+      firstName
+      lastName
+      email
+      type
+      videoCalls {
+        items {
+          id
+          videoCallID
+          userID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+    createdAt
+    updatedAt
+  }
+}
+mutation UpdateCallAttendees(
+  $input: UpdateCallAttendeesInput!
+  $condition: ModelCallAttendeesConditionInput
+) {
+  updateCallAttendees(input: $input, condition: $condition) {
+    id
+    videoCallID
+    userID
+    videoCall {
+      id
+      attendeeIds
+      title
+      time
+      status
+      attendees {
+        items {
+          id
+          videoCallID
+          userID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+    user {
+      id
+      firstName
+      lastName
+      email
+      type
+      videoCalls {
+        items {
+          id
+          videoCallID
+          userID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+    createdAt
+    updatedAt
+  }
+}
+mutation DeleteCallAttendees(
+  $input: DeleteCallAttendeesInput!
+  $condition: ModelCallAttendeesConditionInput
+) {
+  deleteCallAttendees(input: $input, condition: $condition) {
+    id
+    videoCallID
+    userID
+    videoCall {
+      id
+      attendeeIds
+      title
+      time
+      status
+      attendees {
+        items {
+          id
+          videoCallID
+          userID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+    user {
+      id
+      firstName
+      lastName
+      email
+      type
+      videoCalls {
+        items {
+          id
+          videoCallID
+          userID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
     createdAt
     updatedAt
   }

@@ -1,1 +1,69 @@
-<p>home works!</p>
+<div class="card lg:card-side bordered">
+  <div class="card-body">
+    <h2 class="card-title">Events for Today</h2>
+    <div class="overflow-x-auto">
+      <table class="table w-full table-zebra">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Title</th>
+            <th>Time</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of videoCalls; let i = index">
+            <th>{{i+1}}</th>
+            <td>{{item.title}}</td>
+            <td>{{item.time | date:
+              'mediumDate' }}</td>
+            <td>
+              <div class="badge">{{item.status}}</div>
+            </td>
+            <td>
+              <div class="btn btn-primary btn-sm" [routerLink]="['/call', item.id]">
+                Join Call</div>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div class="card lg:card-side bordered">
+  <div class="card-body">
+    <h2 class="card-title">New Requests</h2>
+    <div class="overflow-x-auto">
+      <table class="table w-full table-zebra">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Title</th>
+            <th>Time</th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let call of unApprovedCalls; let i = index">
+            <th>{{i+1}}</th>
+            <td>{{call.title}}</td>
+            <td>{{call.time | date:
+              'mediumDate' }}</td>
+            <td>
+              <div class="btn btn-primary btn-sm" (click)="approveCallRequest(call.id)">
+                Approve</div>
+            </td>
+            <td>
+              <div class="btn btn-primary btn-sm btn-accent">
+                Reschedule</div>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

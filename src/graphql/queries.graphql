@@ -36,8 +36,37 @@ query GetVideoCall($id: ID!) {
   getVideoCall(id: $id) {
     id
     attendeeIds
+    title
     time
     status
+    attendees {
+      items {
+        id
+        videoCallID
+        userID
+        videoCall {
+          id
+          attendeeIds
+          title
+          time
+          status
+          createdAt
+          updatedAt
+        }
+        user {
+          id
+          firstName
+          lastName
+          email
+          type
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
     createdAt
     updatedAt
   }
@@ -51,8 +80,19 @@ query ListVideoCalls(
     items {
       id
       attendeeIds
+      title
       time
       status
+      attendees {
+        items {
+          id
+          videoCallID
+          userID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -66,6 +106,34 @@ query GetUser($id: ID!) {
     lastName
     email
     type
+    videoCalls {
+      items {
+        id
+        videoCallID
+        userID
+        videoCall {
+          id
+          attendeeIds
+          title
+          time
+          status
+          createdAt
+          updatedAt
+        }
+        user {
+          id
+          firstName
+          lastName
+          email
+          type
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
     createdAt
     updatedAt
   }
@@ -82,6 +150,103 @@ query ListUsers(
       lastName
       email
       type
+      videoCalls {
+        items {
+          id
+          videoCallID
+          userID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+    nextToken
+  }
+}
+query GetCallAttendees($id: ID!) {
+  getCallAttendees(id: $id) {
+    id
+    videoCallID
+    userID
+    videoCall {
+      id
+      attendeeIds
+      title
+      time
+      status
+      attendees {
+        items {
+          id
+          videoCallID
+          userID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+    user {
+      id
+      firstName
+      lastName
+      email
+      type
+      videoCalls {
+        items {
+          id
+          videoCallID
+          userID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+    createdAt
+    updatedAt
+  }
+}
+query ListCallAttendees(
+  $filter: ModelCallAttendeesFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listCallAttendees(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      videoCallID
+      userID
+      videoCall {
+        id
+        attendeeIds
+        title
+        time
+        status
+        attendees {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      user {
+        id
+        firstName
+        lastName
+        email
+        type
+        videoCalls {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }

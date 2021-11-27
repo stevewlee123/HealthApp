@@ -19,6 +19,9 @@ export type __SubscriptionContainer = {
   onCreateUser: OnCreateUserSubscription;
   onUpdateUser: OnUpdateUserSubscription;
   onDeleteUser: OnDeleteUserSubscription;
+  onCreateCallAttendees: OnCreateCallAttendeesSubscription;
+  onUpdateCallAttendees: OnUpdateCallAttendeesSubscription;
+  onDeleteCallAttendees: OnDeleteCallAttendeesSubscription;
 };
 
 export type CreatePostInput = {
@@ -124,6 +127,7 @@ export type DeletePostInput = {
 export type CreateVideoCallInput = {
   id?: string | null;
   attendeeIds?: Array<string | null> | null;
+  title?: string | null;
   time?: string | null;
   status?: CallStatus | null;
 };
@@ -135,6 +139,7 @@ export enum CallStatus {
 
 export type ModelVideoCallConditionInput = {
   attendeeIds?: ModelStringInput | null;
+  title?: ModelStringInput | null;
   time?: ModelStringInput | null;
   status?: ModelCallStatusInput | null;
   and?: Array<ModelVideoCallConditionInput | null> | null;
@@ -151,15 +156,52 @@ export type VideoCall = {
   __typename: "VideoCall";
   id: string;
   attendeeIds?: Array<string | null> | null;
+  title?: string | null;
   time?: string | null;
   status?: CallStatus | null;
+  attendees?: ModelCallAttendeesConnection | null;
   createdAt: string;
   updatedAt: string;
 };
 
+export type ModelCallAttendeesConnection = {
+  __typename: "ModelCallAttendeesConnection";
+  items: Array<CallAttendees>;
+  nextToken?: string | null;
+};
+
+export type CallAttendees = {
+  __typename: "CallAttendees";
+  id: string;
+  videoCallID: string;
+  userID: string;
+  videoCall: VideoCall;
+  user: User;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type User = {
+  __typename: "User";
+  id: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  email?: string | null;
+  type?: UserType | null;
+  videoCalls?: ModelCallAttendeesConnection | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export enum UserType {
+  doctor = "doctor",
+  patient = "patient"
+}
+
 export type UpdateVideoCallInput = {
   id: string;
   attendeeIds?: Array<string | null> | null;
+  title?: string | null;
   time?: string | null;
   status?: CallStatus | null;
 };
@@ -176,11 +218,6 @@ export type CreateUserInput = {
   type?: UserType | null;
 };
 
-export enum UserType {
-  doctor = "doctor",
-  patient = "patient"
-}
-
 export type ModelUserConditionInput = {
   firstName?: ModelStringInput | null;
   lastName?: ModelStringInput | null;
@@ -196,17 +233,6 @@ export type ModelUserTypeInput = {
   ne?: UserType | null;
 };
 
-export type User = {
-  __typename: "User";
-  id: string;
-  firstName?: string | null;
-  lastName?: string | null;
-  email?: string | null;
-  type?: UserType | null;
-  createdAt: string;
-  updatedAt: string;
-};
-
 export type UpdateUserInput = {
   id: string;
   firstName?: string | null;
@@ -219,17 +245,18 @@ export type DeleteUserInput = {
   id: string;
 };
 
-export type ModelPostFilterInput = {
-  id?: ModelIDInput | null;
-  imagekey?: ModelStringInput | null;
-  author?: ModelStringInput | null;
-  comment?: ModelStringInput | null;
-  locationName?: ModelStringInput | null;
-  lat?: ModelFloatInput | null;
-  long?: ModelFloatInput | null;
-  and?: Array<ModelPostFilterInput | null> | null;
-  or?: Array<ModelPostFilterInput | null> | null;
-  not?: ModelPostFilterInput | null;
+export type CreateCallAttendeesInput = {
+  id?: string | null;
+  videoCallID: string;
+  userID: string;
+};
+
+export type ModelCallAttendeesConditionInput = {
+  videoCallID?: ModelIDInput | null;
+  userID?: ModelIDInput | null;
+  and?: Array<ModelCallAttendeesConditionInput | null> | null;
+  or?: Array<ModelCallAttendeesConditionInput | null> | null;
+  not?: ModelCallAttendeesConditionInput | null;
 };
 
 export type ModelIDInput = {
@@ -248,15 +275,39 @@ export type ModelIDInput = {
   size?: ModelSizeInput | null;
 };
 
+export type UpdateCallAttendeesInput = {
+  id: string;
+  videoCallID?: string | null;
+  userID?: string | null;
+};
+
+export type DeleteCallAttendeesInput = {
+  id: string;
+};
+
+export type ModelPostFilterInput = {
+  id?: ModelIDInput | null;
+  imagekey?: ModelStringInput | null;
+  author?: ModelStringInput | null;
+  comment?: ModelStringInput | null;
+  locationName?: ModelStringInput | null;
+  lat?: ModelFloatInput | null;
+  long?: ModelFloatInput | null;
+  and?: Array<ModelPostFilterInput | null> | null;
+  or?: Array<ModelPostFilterInput | null> | null;
+  not?: ModelPostFilterInput | null;
+};
+
 export type ModelPostConnection = {
   __typename: "ModelPostConnection";
-  items?: Array<Post | null> | null;
+  items: Array<Post>;
   nextToken?: string | null;
 };
 
 export type ModelVideoCallFilterInput = {
   id?: ModelIDInput | null;
   attendeeIds?: ModelStringInput | null;
+  title?: ModelStringInput | null;
   time?: ModelStringInput | null;
   status?: ModelCallStatusInput | null;
   and?: Array<ModelVideoCallFilterInput | null> | null;
@@ -266,7 +317,7 @@ export type ModelVideoCallFilterInput = {
 
 export type ModelVideoCallConnection = {
   __typename: "ModelVideoCallConnection";
-  items?: Array<VideoCall | null> | null;
+  items: Array<VideoCall>;
   nextToken?: string | null;
 };
 
@@ -283,8 +334,17 @@ export type ModelUserFilterInput = {
 
 export type ModelUserConnection = {
   __typename: "ModelUserConnection";
-  items?: Array<User | null> | null;
+  items: Array<User>;
   nextToken?: string | null;
+};
+
+export type ModelCallAttendeesFilterInput = {
+  id?: ModelIDInput | null;
+  videoCallID?: ModelIDInput | null;
+  userID?: ModelIDInput | null;
+  and?: Array<ModelCallAttendeesFilterInput | null> | null;
+  or?: Array<ModelCallAttendeesFilterInput | null> | null;
+  not?: ModelCallAttendeesFilterInput | null;
 };
 
 export type CreatePostMutation = {
@@ -330,8 +390,41 @@ export type CreateVideoCallMutation = {
   __typename: "VideoCall";
   id: string;
   attendeeIds?: Array<string | null> | null;
+  title?: string | null;
   time?: string | null;
   status?: CallStatus | null;
+  attendees?: {
+    __typename: "ModelCallAttendeesConnection";
+    items: Array<{
+      __typename: "CallAttendees";
+      id: string;
+      videoCallID: string;
+      userID: string;
+      videoCall: {
+        __typename: "VideoCall";
+        id: string;
+        attendeeIds?: Array<string | null> | null;
+        title?: string | null;
+        time?: string | null;
+        status?: CallStatus | null;
+        createdAt: string;
+        updatedAt: string;
+      };
+      user: {
+        __typename: "User";
+        id: string;
+        firstName?: string | null;
+        lastName?: string | null;
+        email?: string | null;
+        type?: UserType | null;
+        createdAt: string;
+        updatedAt: string;
+      };
+      createdAt: string;
+      updatedAt: string;
+    }>;
+    nextToken?: string | null;
+  } | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -340,8 +433,41 @@ export type UpdateVideoCallMutation = {
   __typename: "VideoCall";
   id: string;
   attendeeIds?: Array<string | null> | null;
+  title?: string | null;
   time?: string | null;
   status?: CallStatus | null;
+  attendees?: {
+    __typename: "ModelCallAttendeesConnection";
+    items: Array<{
+      __typename: "CallAttendees";
+      id: string;
+      videoCallID: string;
+      userID: string;
+      videoCall: {
+        __typename: "VideoCall";
+        id: string;
+        attendeeIds?: Array<string | null> | null;
+        title?: string | null;
+        time?: string | null;
+        status?: CallStatus | null;
+        createdAt: string;
+        updatedAt: string;
+      };
+      user: {
+        __typename: "User";
+        id: string;
+        firstName?: string | null;
+        lastName?: string | null;
+        email?: string | null;
+        type?: UserType | null;
+        createdAt: string;
+        updatedAt: string;
+      };
+      createdAt: string;
+      updatedAt: string;
+    }>;
+    nextToken?: string | null;
+  } | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -350,8 +476,41 @@ export type DeleteVideoCallMutation = {
   __typename: "VideoCall";
   id: string;
   attendeeIds?: Array<string | null> | null;
+  title?: string | null;
   time?: string | null;
   status?: CallStatus | null;
+  attendees?: {
+    __typename: "ModelCallAttendeesConnection";
+    items: Array<{
+      __typename: "CallAttendees";
+      id: string;
+      videoCallID: string;
+      userID: string;
+      videoCall: {
+        __typename: "VideoCall";
+        id: string;
+        attendeeIds?: Array<string | null> | null;
+        title?: string | null;
+        time?: string | null;
+        status?: CallStatus | null;
+        createdAt: string;
+        updatedAt: string;
+      };
+      user: {
+        __typename: "User";
+        id: string;
+        firstName?: string | null;
+        lastName?: string | null;
+        email?: string | null;
+        type?: UserType | null;
+        createdAt: string;
+        updatedAt: string;
+      };
+      createdAt: string;
+      updatedAt: string;
+    }>;
+    nextToken?: string | null;
+  } | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -363,6 +522,38 @@ export type CreateUserMutation = {
   lastName?: string | null;
   email?: string | null;
   type?: UserType | null;
+  videoCalls?: {
+    __typename: "ModelCallAttendeesConnection";
+    items: Array<{
+      __typename: "CallAttendees";
+      id: string;
+      videoCallID: string;
+      userID: string;
+      videoCall: {
+        __typename: "VideoCall";
+        id: string;
+        attendeeIds?: Array<string | null> | null;
+        title?: string | null;
+        time?: string | null;
+        status?: CallStatus | null;
+        createdAt: string;
+        updatedAt: string;
+      };
+      user: {
+        __typename: "User";
+        id: string;
+        firstName?: string | null;
+        lastName?: string | null;
+        email?: string | null;
+        type?: UserType | null;
+        createdAt: string;
+        updatedAt: string;
+      };
+      createdAt: string;
+      updatedAt: string;
+    }>;
+    nextToken?: string | null;
+  } | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -374,6 +565,38 @@ export type UpdateUserMutation = {
   lastName?: string | null;
   email?: string | null;
   type?: UserType | null;
+  videoCalls?: {
+    __typename: "ModelCallAttendeesConnection";
+    items: Array<{
+      __typename: "CallAttendees";
+      id: string;
+      videoCallID: string;
+      userID: string;
+      videoCall: {
+        __typename: "VideoCall";
+        id: string;
+        attendeeIds?: Array<string | null> | null;
+        title?: string | null;
+        time?: string | null;
+        status?: CallStatus | null;
+        createdAt: string;
+        updatedAt: string;
+      };
+      user: {
+        __typename: "User";
+        id: string;
+        firstName?: string | null;
+        lastName?: string | null;
+        email?: string | null;
+        type?: UserType | null;
+        createdAt: string;
+        updatedAt: string;
+      };
+      createdAt: string;
+      updatedAt: string;
+    }>;
+    nextToken?: string | null;
+  } | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -385,6 +608,197 @@ export type DeleteUserMutation = {
   lastName?: string | null;
   email?: string | null;
   type?: UserType | null;
+  videoCalls?: {
+    __typename: "ModelCallAttendeesConnection";
+    items: Array<{
+      __typename: "CallAttendees";
+      id: string;
+      videoCallID: string;
+      userID: string;
+      videoCall: {
+        __typename: "VideoCall";
+        id: string;
+        attendeeIds?: Array<string | null> | null;
+        title?: string | null;
+        time?: string | null;
+        status?: CallStatus | null;
+        createdAt: string;
+        updatedAt: string;
+      };
+      user: {
+        __typename: "User";
+        id: string;
+        firstName?: string | null;
+        lastName?: string | null;
+        email?: string | null;
+        type?: UserType | null;
+        createdAt: string;
+        updatedAt: string;
+      };
+      createdAt: string;
+      updatedAt: string;
+    }>;
+    nextToken?: string | null;
+  } | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type CreateCallAttendeesMutation = {
+  __typename: "CallAttendees";
+  id: string;
+  videoCallID: string;
+  userID: string;
+  videoCall: {
+    __typename: "VideoCall";
+    id: string;
+    attendeeIds?: Array<string | null> | null;
+    title?: string | null;
+    time?: string | null;
+    status?: CallStatus | null;
+    attendees?: {
+      __typename: "ModelCallAttendeesConnection";
+      items: Array<{
+        __typename: "CallAttendees";
+        id: string;
+        videoCallID: string;
+        userID: string;
+        createdAt: string;
+        updatedAt: string;
+      }>;
+      nextToken?: string | null;
+    } | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+  user: {
+    __typename: "User";
+    id: string;
+    firstName?: string | null;
+    lastName?: string | null;
+    email?: string | null;
+    type?: UserType | null;
+    videoCalls?: {
+      __typename: "ModelCallAttendeesConnection";
+      items: Array<{
+        __typename: "CallAttendees";
+        id: string;
+        videoCallID: string;
+        userID: string;
+        createdAt: string;
+        updatedAt: string;
+      }>;
+      nextToken?: string | null;
+    } | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type UpdateCallAttendeesMutation = {
+  __typename: "CallAttendees";
+  id: string;
+  videoCallID: string;
+  userID: string;
+  videoCall: {
+    __typename: "VideoCall";
+    id: string;
+    attendeeIds?: Array<string | null> | null;
+    title?: string | null;
+    time?: string | null;
+    status?: CallStatus | null;
+    attendees?: {
+      __typename: "ModelCallAttendeesConnection";
+      items: Array<{
+        __typename: "CallAttendees";
+        id: string;
+        videoCallID: string;
+        userID: string;
+        createdAt: string;
+        updatedAt: string;
+      }>;
+      nextToken?: string | null;
+    } | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+  user: {
+    __typename: "User";
+    id: string;
+    firstName?: string | null;
+    lastName?: string | null;
+    email?: string | null;
+    type?: UserType | null;
+    videoCalls?: {
+      __typename: "ModelCallAttendeesConnection";
+      items: Array<{
+        __typename: "CallAttendees";
+        id: string;
+        videoCallID: string;
+        userID: string;
+        createdAt: string;
+        updatedAt: string;
+      }>;
+      nextToken?: string | null;
+    } | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type DeleteCallAttendeesMutation = {
+  __typename: "CallAttendees";
+  id: string;
+  videoCallID: string;
+  userID: string;
+  videoCall: {
+    __typename: "VideoCall";
+    id: string;
+    attendeeIds?: Array<string | null> | null;
+    title?: string | null;
+    time?: string | null;
+    status?: CallStatus | null;
+    attendees?: {
+      __typename: "ModelCallAttendeesConnection";
+      items: Array<{
+        __typename: "CallAttendees";
+        id: string;
+        videoCallID: string;
+        userID: string;
+        createdAt: string;
+        updatedAt: string;
+      }>;
+      nextToken?: string | null;
+    } | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+  user: {
+    __typename: "User";
+    id: string;
+    firstName?: string | null;
+    lastName?: string | null;
+    email?: string | null;
+    type?: UserType | null;
+    videoCalls?: {
+      __typename: "ModelCallAttendeesConnection";
+      items: Array<{
+        __typename: "CallAttendees";
+        id: string;
+        videoCallID: string;
+        userID: string;
+        createdAt: string;
+        updatedAt: string;
+      }>;
+      nextToken?: string | null;
+    } | null;
+    createdAt: string;
+    updatedAt: string;
+  };
   createdAt: string;
   updatedAt: string;
 };
@@ -404,7 +818,7 @@ export type GetPostQuery = {
 
 export type ListPostsQuery = {
   __typename: "ModelPostConnection";
-  items?: Array<{
+  items: Array<{
     __typename: "Post";
     id: string;
     imagekey: string;
@@ -415,7 +829,7 @@ export type ListPostsQuery = {
     long?: number | null;
     createdAt: string;
     updatedAt: string;
-  } | null> | null;
+  }>;
   nextToken?: string | null;
 };
 
@@ -423,23 +837,69 @@ export type GetVideoCallQuery = {
   __typename: "VideoCall";
   id: string;
   attendeeIds?: Array<string | null> | null;
+  title?: string | null;
   time?: string | null;
   status?: CallStatus | null;
+  attendees?: {
+    __typename: "ModelCallAttendeesConnection";
+    items: Array<{
+      __typename: "CallAttendees";
+      id: string;
+      videoCallID: string;
+      userID: string;
+      videoCall: {
+        __typename: "VideoCall";
+        id: string;
+        attendeeIds?: Array<string | null> | null;
+        title?: string | null;
+        time?: string | null;
+        status?: CallStatus | null;
+        createdAt: string;
+        updatedAt: string;
+      };
+      user: {
+        __typename: "User";
+        id: string;
+        firstName?: string | null;
+        lastName?: string | null;
+        email?: string | null;
+        type?: UserType | null;
+        createdAt: string;
+        updatedAt: string;
+      };
+      createdAt: string;
+      updatedAt: string;
+    }>;
+    nextToken?: string | null;
+  } | null;
   createdAt: string;
   updatedAt: string;
 };
 
 export type ListVideoCallsQuery = {
   __typename: "ModelVideoCallConnection";
-  items?: Array<{
+  items: Array<{
     __typename: "VideoCall";
     id: string;
     attendeeIds?: Array<string | null> | null;
+    title?: string | null;
     time?: string | null;
     status?: CallStatus | null;
+    attendees?: {
+      __typename: "ModelCallAttendeesConnection";
+      items: Array<{
+        __typename: "CallAttendees";
+        id: string;
+        videoCallID: string;
+        userID: string;
+        createdAt: string;
+        updatedAt: string;
+      }>;
+      nextToken?: string | null;
+    } | null;
     createdAt: string;
     updatedAt: string;
-  } | null> | null;
+  }>;
   nextToken?: string | null;
 };
 
@@ -450,22 +910,160 @@ export type GetUserQuery = {
   lastName?: string | null;
   email?: string | null;
   type?: UserType | null;
+  videoCalls?: {
+    __typename: "ModelCallAttendeesConnection";
+    items: Array<{
+      __typename: "CallAttendees";
+      id: string;
+      videoCallID: string;
+      userID: string;
+      videoCall: {
+        __typename: "VideoCall";
+        id: string;
+        attendeeIds?: Array<string | null> | null;
+        title?: string | null;
+        time?: string | null;
+        status?: CallStatus | null;
+        createdAt: string;
+        updatedAt: string;
+      };
+      user: {
+        __typename: "User";
+        id: string;
+        firstName?: string | null;
+        lastName?: string | null;
+        email?: string | null;
+        type?: UserType | null;
+        createdAt: string;
+        updatedAt: string;
+      };
+      createdAt: string;
+      updatedAt: string;
+    }>;
+    nextToken?: string | null;
+  } | null;
   createdAt: string;
   updatedAt: string;
 };
 
 export type ListUsersQuery = {
   __typename: "ModelUserConnection";
-  items?: Array<{
+  items: Array<{
     __typename: "User";
     id: string;
     firstName?: string | null;
     lastName?: string | null;
     email?: string | null;
     type?: UserType | null;
+    videoCalls?: {
+      __typename: "ModelCallAttendeesConnection";
+      items: Array<{
+        __typename: "CallAttendees";
+        id: string;
+        videoCallID: string;
+        userID: string;
+        createdAt: string;
+        updatedAt: string;
+      }>;
+      nextToken?: string | null;
+    } | null;
     createdAt: string;
     updatedAt: string;
-  } | null> | null;
+  }>;
+  nextToken?: string | null;
+};
+
+export type GetCallAttendeesQuery = {
+  __typename: "CallAttendees";
+  id: string;
+  videoCallID: string;
+  userID: string;
+  videoCall: {
+    __typename: "VideoCall";
+    id: string;
+    attendeeIds?: Array<string | null> | null;
+    title?: string | null;
+    time?: string | null;
+    status?: CallStatus | null;
+    attendees?: {
+      __typename: "ModelCallAttendeesConnection";
+      items: Array<{
+        __typename: "CallAttendees";
+        id: string;
+        videoCallID: string;
+        userID: string;
+        createdAt: string;
+        updatedAt: string;
+      }>;
+      nextToken?: string | null;
+    } | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+  user: {
+    __typename: "User";
+    id: string;
+    firstName?: string | null;
+    lastName?: string | null;
+    email?: string | null;
+    type?: UserType | null;
+    videoCalls?: {
+      __typename: "ModelCallAttendeesConnection";
+      items: Array<{
+        __typename: "CallAttendees";
+        id: string;
+        videoCallID: string;
+        userID: string;
+        createdAt: string;
+        updatedAt: string;
+      }>;
+      nextToken?: string | null;
+    } | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type ListCallAttendeesQuery = {
+  __typename: "ModelCallAttendeesConnection";
+  items: Array<{
+    __typename: "CallAttendees";
+    id: string;
+    videoCallID: string;
+    userID: string;
+    videoCall: {
+      __typename: "VideoCall";
+      id: string;
+      attendeeIds?: Array<string | null> | null;
+      title?: string | null;
+      time?: string | null;
+      status?: CallStatus | null;
+      attendees?: {
+        __typename: "ModelCallAttendeesConnection";
+        nextToken?: string | null;
+      } | null;
+      createdAt: string;
+      updatedAt: string;
+    };
+    user: {
+      __typename: "User";
+      id: string;
+      firstName?: string | null;
+      lastName?: string | null;
+      email?: string | null;
+      type?: UserType | null;
+      videoCalls?: {
+        __typename: "ModelCallAttendeesConnection";
+        nextToken?: string | null;
+      } | null;
+      createdAt: string;
+      updatedAt: string;
+    };
+    createdAt: string;
+    updatedAt: string;
+  }>;
   nextToken?: string | null;
 };
 
@@ -512,8 +1110,41 @@ export type OnCreateVideoCallSubscription = {
   __typename: "VideoCall";
   id: string;
   attendeeIds?: Array<string | null> | null;
+  title?: string | null;
   time?: string | null;
   status?: CallStatus | null;
+  attendees?: {
+    __typename: "ModelCallAttendeesConnection";
+    items: Array<{
+      __typename: "CallAttendees";
+      id: string;
+      videoCallID: string;
+      userID: string;
+      videoCall: {
+        __typename: "VideoCall";
+        id: string;
+        attendeeIds?: Array<string | null> | null;
+        title?: string | null;
+        time?: string | null;
+        status?: CallStatus | null;
+        createdAt: string;
+        updatedAt: string;
+      };
+      user: {
+        __typename: "User";
+        id: string;
+        firstName?: string | null;
+        lastName?: string | null;
+        email?: string | null;
+        type?: UserType | null;
+        createdAt: string;
+        updatedAt: string;
+      };
+      createdAt: string;
+      updatedAt: string;
+    }>;
+    nextToken?: string | null;
+  } | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -522,8 +1153,41 @@ export type OnUpdateVideoCallSubscription = {
   __typename: "VideoCall";
   id: string;
   attendeeIds?: Array<string | null> | null;
+  title?: string | null;
   time?: string | null;
   status?: CallStatus | null;
+  attendees?: {
+    __typename: "ModelCallAttendeesConnection";
+    items: Array<{
+      __typename: "CallAttendees";
+      id: string;
+      videoCallID: string;
+      userID: string;
+      videoCall: {
+        __typename: "VideoCall";
+        id: string;
+        attendeeIds?: Array<string | null> | null;
+        title?: string | null;
+        time?: string | null;
+        status?: CallStatus | null;
+        createdAt: string;
+        updatedAt: string;
+      };
+      user: {
+        __typename: "User";
+        id: string;
+        firstName?: string | null;
+        lastName?: string | null;
+        email?: string | null;
+        type?: UserType | null;
+        createdAt: string;
+        updatedAt: string;
+      };
+      createdAt: string;
+      updatedAt: string;
+    }>;
+    nextToken?: string | null;
+  } | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -532,8 +1196,41 @@ export type OnDeleteVideoCallSubscription = {
   __typename: "VideoCall";
   id: string;
   attendeeIds?: Array<string | null> | null;
+  title?: string | null;
   time?: string | null;
   status?: CallStatus | null;
+  attendees?: {
+    __typename: "ModelCallAttendeesConnection";
+    items: Array<{
+      __typename: "CallAttendees";
+      id: string;
+      videoCallID: string;
+      userID: string;
+      videoCall: {
+        __typename: "VideoCall";
+        id: string;
+        attendeeIds?: Array<string | null> | null;
+        title?: string | null;
+        time?: string | null;
+        status?: CallStatus | null;
+        createdAt: string;
+        updatedAt: string;
+      };
+      user: {
+        __typename: "User";
+        id: string;
+        firstName?: string | null;
+        lastName?: string | null;
+        email?: string | null;
+        type?: UserType | null;
+        createdAt: string;
+        updatedAt: string;
+      };
+      createdAt: string;
+      updatedAt: string;
+    }>;
+    nextToken?: string | null;
+  } | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -545,6 +1242,38 @@ export type OnCreateUserSubscription = {
   lastName?: string | null;
   email?: string | null;
   type?: UserType | null;
+  videoCalls?: {
+    __typename: "ModelCallAttendeesConnection";
+    items: Array<{
+      __typename: "CallAttendees";
+      id: string;
+      videoCallID: string;
+      userID: string;
+      videoCall: {
+        __typename: "VideoCall";
+        id: string;
+        attendeeIds?: Array<string | null> | null;
+        title?: string | null;
+        time?: string | null;
+        status?: CallStatus | null;
+        createdAt: string;
+        updatedAt: string;
+      };
+      user: {
+        __typename: "User";
+        id: string;
+        firstName?: string | null;
+        lastName?: string | null;
+        email?: string | null;
+        type?: UserType | null;
+        createdAt: string;
+        updatedAt: string;
+      };
+      createdAt: string;
+      updatedAt: string;
+    }>;
+    nextToken?: string | null;
+  } | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -556,6 +1285,38 @@ export type OnUpdateUserSubscription = {
   lastName?: string | null;
   email?: string | null;
   type?: UserType | null;
+  videoCalls?: {
+    __typename: "ModelCallAttendeesConnection";
+    items: Array<{
+      __typename: "CallAttendees";
+      id: string;
+      videoCallID: string;
+      userID: string;
+      videoCall: {
+        __typename: "VideoCall";
+        id: string;
+        attendeeIds?: Array<string | null> | null;
+        title?: string | null;
+        time?: string | null;
+        status?: CallStatus | null;
+        createdAt: string;
+        updatedAt: string;
+      };
+      user: {
+        __typename: "User";
+        id: string;
+        firstName?: string | null;
+        lastName?: string | null;
+        email?: string | null;
+        type?: UserType | null;
+        createdAt: string;
+        updatedAt: string;
+      };
+      createdAt: string;
+      updatedAt: string;
+    }>;
+    nextToken?: string | null;
+  } | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -567,6 +1328,197 @@ export type OnDeleteUserSubscription = {
   lastName?: string | null;
   email?: string | null;
   type?: UserType | null;
+  videoCalls?: {
+    __typename: "ModelCallAttendeesConnection";
+    items: Array<{
+      __typename: "CallAttendees";
+      id: string;
+      videoCallID: string;
+      userID: string;
+      videoCall: {
+        __typename: "VideoCall";
+        id: string;
+        attendeeIds?: Array<string | null> | null;
+        title?: string | null;
+        time?: string | null;
+        status?: CallStatus | null;
+        createdAt: string;
+        updatedAt: string;
+      };
+      user: {
+        __typename: "User";
+        id: string;
+        firstName?: string | null;
+        lastName?: string | null;
+        email?: string | null;
+        type?: UserType | null;
+        createdAt: string;
+        updatedAt: string;
+      };
+      createdAt: string;
+      updatedAt: string;
+    }>;
+    nextToken?: string | null;
+  } | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type OnCreateCallAttendeesSubscription = {
+  __typename: "CallAttendees";
+  id: string;
+  videoCallID: string;
+  userID: string;
+  videoCall: {
+    __typename: "VideoCall";
+    id: string;
+    attendeeIds?: Array<string | null> | null;
+    title?: string | null;
+    time?: string | null;
+    status?: CallStatus | null;
+    attendees?: {
+      __typename: "ModelCallAttendeesConnection";
+      items: Array<{
+        __typename: "CallAttendees";
+        id: string;
+        videoCallID: string;
+        userID: string;
+        createdAt: string;
+        updatedAt: string;
+      }>;
+      nextToken?: string | null;
+    } | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+  user: {
+    __typename: "User";
+    id: string;
+    firstName?: string | null;
+    lastName?: string | null;
+    email?: string | null;
+    type?: UserType | null;
+    videoCalls?: {
+      __typename: "ModelCallAttendeesConnection";
+      items: Array<{
+        __typename: "CallAttendees";
+        id: string;
+        videoCallID: string;
+        userID: string;
+        createdAt: string;
+        updatedAt: string;
+      }>;
+      nextToken?: string | null;
+    } | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type OnUpdateCallAttendeesSubscription = {
+  __typename: "CallAttendees";
+  id: string;
+  videoCallID: string;
+  userID: string;
+  videoCall: {
+    __typename: "VideoCall";
+    id: string;
+    attendeeIds?: Array<string | null> | null;
+    title?: string | null;
+    time?: string | null;
+    status?: CallStatus | null;
+    attendees?: {
+      __typename: "ModelCallAttendeesConnection";
+      items: Array<{
+        __typename: "CallAttendees";
+        id: string;
+        videoCallID: string;
+        userID: string;
+        createdAt: string;
+        updatedAt: string;
+      }>;
+      nextToken?: string | null;
+    } | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+  user: {
+    __typename: "User";
+    id: string;
+    firstName?: string | null;
+    lastName?: string | null;
+    email?: string | null;
+    type?: UserType | null;
+    videoCalls?: {
+      __typename: "ModelCallAttendeesConnection";
+      items: Array<{
+        __typename: "CallAttendees";
+        id: string;
+        videoCallID: string;
+        userID: string;
+        createdAt: string;
+        updatedAt: string;
+      }>;
+      nextToken?: string | null;
+    } | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type OnDeleteCallAttendeesSubscription = {
+  __typename: "CallAttendees";
+  id: string;
+  videoCallID: string;
+  userID: string;
+  videoCall: {
+    __typename: "VideoCall";
+    id: string;
+    attendeeIds?: Array<string | null> | null;
+    title?: string | null;
+    time?: string | null;
+    status?: CallStatus | null;
+    attendees?: {
+      __typename: "ModelCallAttendeesConnection";
+      items: Array<{
+        __typename: "CallAttendees";
+        id: string;
+        videoCallID: string;
+        userID: string;
+        createdAt: string;
+        updatedAt: string;
+      }>;
+      nextToken?: string | null;
+    } | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+  user: {
+    __typename: "User";
+    id: string;
+    firstName?: string | null;
+    lastName?: string | null;
+    email?: string | null;
+    type?: UserType | null;
+    videoCalls?: {
+      __typename: "ModelCallAttendeesConnection";
+      items: Array<{
+        __typename: "CallAttendees";
+        id: string;
+        videoCallID: string;
+        userID: string;
+        createdAt: string;
+        updatedAt: string;
+      }>;
+      nextToken?: string | null;
+    } | null;
+    createdAt: string;
+    updatedAt: string;
+  };
   createdAt: string;
   updatedAt: string;
 };
@@ -671,8 +1623,41 @@ export class APIService {
           __typename
           id
           attendeeIds
+          title
           time
           status
+          attendees {
+            __typename
+            items {
+              __typename
+              id
+              videoCallID
+              userID
+              videoCall {
+                __typename
+                id
+                attendeeIds
+                title
+                time
+                status
+                createdAt
+                updatedAt
+              }
+              user {
+                __typename
+                id
+                firstName
+                lastName
+                email
+                type
+                createdAt
+                updatedAt
+              }
+              createdAt
+              updatedAt
+            }
+            nextToken
+          }
           createdAt
           updatedAt
         }
@@ -697,8 +1682,41 @@ export class APIService {
           __typename
           id
           attendeeIds
+          title
           time
           status
+          attendees {
+            __typename
+            items {
+              __typename
+              id
+              videoCallID
+              userID
+              videoCall {
+                __typename
+                id
+                attendeeIds
+                title
+                time
+                status
+                createdAt
+                updatedAt
+              }
+              user {
+                __typename
+                id
+                firstName
+                lastName
+                email
+                type
+                createdAt
+                updatedAt
+              }
+              createdAt
+              updatedAt
+            }
+            nextToken
+          }
           createdAt
           updatedAt
         }
@@ -723,8 +1741,41 @@ export class APIService {
           __typename
           id
           attendeeIds
+          title
           time
           status
+          attendees {
+            __typename
+            items {
+              __typename
+              id
+              videoCallID
+              userID
+              videoCall {
+                __typename
+                id
+                attendeeIds
+                title
+                time
+                status
+                createdAt
+                updatedAt
+              }
+              user {
+                __typename
+                id
+                firstName
+                lastName
+                email
+                type
+                createdAt
+                updatedAt
+              }
+              createdAt
+              updatedAt
+            }
+            nextToken
+          }
           createdAt
           updatedAt
         }
@@ -752,6 +1803,38 @@ export class APIService {
           lastName
           email
           type
+          videoCalls {
+            __typename
+            items {
+              __typename
+              id
+              videoCallID
+              userID
+              videoCall {
+                __typename
+                id
+                attendeeIds
+                title
+                time
+                status
+                createdAt
+                updatedAt
+              }
+              user {
+                __typename
+                id
+                firstName
+                lastName
+                email
+                type
+                createdAt
+                updatedAt
+              }
+              createdAt
+              updatedAt
+            }
+            nextToken
+          }
           createdAt
           updatedAt
         }
@@ -779,6 +1862,38 @@ export class APIService {
           lastName
           email
           type
+          videoCalls {
+            __typename
+            items {
+              __typename
+              id
+              videoCallID
+              userID
+              videoCall {
+                __typename
+                id
+                attendeeIds
+                title
+                time
+                status
+                createdAt
+                updatedAt
+              }
+              user {
+                __typename
+                id
+                firstName
+                lastName
+                email
+                type
+                createdAt
+                updatedAt
+              }
+              createdAt
+              updatedAt
+            }
+            nextToken
+          }
           createdAt
           updatedAt
         }
@@ -806,6 +1921,38 @@ export class APIService {
           lastName
           email
           type
+          videoCalls {
+            __typename
+            items {
+              __typename
+              id
+              videoCallID
+              userID
+              videoCall {
+                __typename
+                id
+                attendeeIds
+                title
+                time
+                status
+                createdAt
+                updatedAt
+              }
+              user {
+                __typename
+                id
+                firstName
+                lastName
+                email
+                type
+                createdAt
+                updatedAt
+              }
+              createdAt
+              updatedAt
+            }
+            nextToken
+          }
           createdAt
           updatedAt
         }
@@ -820,6 +1967,213 @@ export class APIService {
       graphqlOperation(statement, gqlAPIServiceArguments)
     )) as any;
     return <DeleteUserMutation>response.data.deleteUser;
+  }
+  async CreateCallAttendees(
+    input: CreateCallAttendeesInput,
+    condition?: ModelCallAttendeesConditionInput
+  ): Promise<CreateCallAttendeesMutation> {
+    const statement = `mutation CreateCallAttendees($input: CreateCallAttendeesInput!, $condition: ModelCallAttendeesConditionInput) {
+        createCallAttendees(input: $input, condition: $condition) {
+          __typename
+          id
+          videoCallID
+          userID
+          videoCall {
+            __typename
+            id
+            attendeeIds
+            title
+            time
+            status
+            attendees {
+              __typename
+              items {
+                __typename
+                id
+                videoCallID
+                userID
+                createdAt
+                updatedAt
+              }
+              nextToken
+            }
+            createdAt
+            updatedAt
+          }
+          user {
+            __typename
+            id
+            firstName
+            lastName
+            email
+            type
+            videoCalls {
+              __typename
+              items {
+                __typename
+                id
+                videoCallID
+                userID
+                createdAt
+                updatedAt
+              }
+              nextToken
+            }
+            createdAt
+            updatedAt
+          }
+          createdAt
+          updatedAt
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {
+      input
+    };
+    if (condition) {
+      gqlAPIServiceArguments.condition = condition;
+    }
+    const response = (await API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    )) as any;
+    return <CreateCallAttendeesMutation>response.data.createCallAttendees;
+  }
+  async UpdateCallAttendees(
+    input: UpdateCallAttendeesInput,
+    condition?: ModelCallAttendeesConditionInput
+  ): Promise<UpdateCallAttendeesMutation> {
+    const statement = `mutation UpdateCallAttendees($input: UpdateCallAttendeesInput!, $condition: ModelCallAttendeesConditionInput) {
+        updateCallAttendees(input: $input, condition: $condition) {
+          __typename
+          id
+          videoCallID
+          userID
+          videoCall {
+            __typename
+            id
+            attendeeIds
+            title
+            time
+            status
+            attendees {
+              __typename
+              items {
+                __typename
+                id
+                videoCallID
+                userID
+                createdAt
+                updatedAt
+              }
+              nextToken
+            }
+            createdAt
+            updatedAt
+          }
+          user {
+            __typename
+            id
+            firstName
+            lastName
+            email
+            type
+            videoCalls {
+              __typename
+              items {
+                __typename
+                id
+                videoCallID
+                userID
+                createdAt
+                updatedAt
+              }
+              nextToken
+            }
+            createdAt
+            updatedAt
+          }
+          createdAt
+          updatedAt
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {
+      input
+    };
+    if (condition) {
+      gqlAPIServiceArguments.condition = condition;
+    }
+    const response = (await API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    )) as any;
+    return <UpdateCallAttendeesMutation>response.data.updateCallAttendees;
+  }
+  async DeleteCallAttendees(
+    input: DeleteCallAttendeesInput,
+    condition?: ModelCallAttendeesConditionInput
+  ): Promise<DeleteCallAttendeesMutation> {
+    const statement = `mutation DeleteCallAttendees($input: DeleteCallAttendeesInput!, $condition: ModelCallAttendeesConditionInput) {
+        deleteCallAttendees(input: $input, condition: $condition) {
+          __typename
+          id
+          videoCallID
+          userID
+          videoCall {
+            __typename
+            id
+            attendeeIds
+            title
+            time
+            status
+            attendees {
+              __typename
+              items {
+                __typename
+                id
+                videoCallID
+                userID
+                createdAt
+                updatedAt
+              }
+              nextToken
+            }
+            createdAt
+            updatedAt
+          }
+          user {
+            __typename
+            id
+            firstName
+            lastName
+            email
+            type
+            videoCalls {
+              __typename
+              items {
+                __typename
+                id
+                videoCallID
+                userID
+                createdAt
+                updatedAt
+              }
+              nextToken
+            }
+            createdAt
+            updatedAt
+          }
+          createdAt
+          updatedAt
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {
+      input
+    };
+    if (condition) {
+      gqlAPIServiceArguments.condition = condition;
+    }
+    const response = (await API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    )) as any;
+    return <DeleteCallAttendeesMutation>response.data.deleteCallAttendees;
   }
   async GetPost(id: string): Promise<GetPostQuery> {
     const statement = `query GetPost($id: ID!) {
@@ -888,8 +2242,41 @@ export class APIService {
           __typename
           id
           attendeeIds
+          title
           time
           status
+          attendees {
+            __typename
+            items {
+              __typename
+              id
+              videoCallID
+              userID
+              videoCall {
+                __typename
+                id
+                attendeeIds
+                title
+                time
+                status
+                createdAt
+                updatedAt
+              }
+              user {
+                __typename
+                id
+                firstName
+                lastName
+                email
+                type
+                createdAt
+                updatedAt
+              }
+              createdAt
+              updatedAt
+            }
+            nextToken
+          }
           createdAt
           updatedAt
         }
@@ -914,8 +2301,21 @@ export class APIService {
             __typename
             id
             attendeeIds
+            title
             time
             status
+            attendees {
+              __typename
+              items {
+                __typename
+                id
+                videoCallID
+                userID
+                createdAt
+                updatedAt
+              }
+              nextToken
+            }
             createdAt
             updatedAt
           }
@@ -946,6 +2346,38 @@ export class APIService {
           lastName
           email
           type
+          videoCalls {
+            __typename
+            items {
+              __typename
+              id
+              videoCallID
+              userID
+              videoCall {
+                __typename
+                id
+                attendeeIds
+                title
+                time
+                status
+                createdAt
+                updatedAt
+              }
+              user {
+                __typename
+                id
+                firstName
+                lastName
+                email
+                type
+                createdAt
+                updatedAt
+              }
+              createdAt
+              updatedAt
+            }
+            nextToken
+          }
           createdAt
           updatedAt
         }
@@ -973,6 +2405,18 @@ export class APIService {
             lastName
             email
             type
+            videoCalls {
+              __typename
+              items {
+                __typename
+                id
+                videoCallID
+                userID
+                createdAt
+                updatedAt
+              }
+              nextToken
+            }
             createdAt
             updatedAt
           }
@@ -993,6 +2437,131 @@ export class APIService {
       graphqlOperation(statement, gqlAPIServiceArguments)
     )) as any;
     return <ListUsersQuery>response.data.listUsers;
+  }
+  async GetCallAttendees(id: string): Promise<GetCallAttendeesQuery> {
+    const statement = `query GetCallAttendees($id: ID!) {
+        getCallAttendees(id: $id) {
+          __typename
+          id
+          videoCallID
+          userID
+          videoCall {
+            __typename
+            id
+            attendeeIds
+            title
+            time
+            status
+            attendees {
+              __typename
+              items {
+                __typename
+                id
+                videoCallID
+                userID
+                createdAt
+                updatedAt
+              }
+              nextToken
+            }
+            createdAt
+            updatedAt
+          }
+          user {
+            __typename
+            id
+            firstName
+            lastName
+            email
+            type
+            videoCalls {
+              __typename
+              items {
+                __typename
+                id
+                videoCallID
+                userID
+                createdAt
+                updatedAt
+              }
+              nextToken
+            }
+            createdAt
+            updatedAt
+          }
+          createdAt
+          updatedAt
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {
+      id
+    };
+    const response = (await API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    )) as any;
+    return <GetCallAttendeesQuery>response.data.getCallAttendees;
+  }
+  async ListCallAttendees(
+    filter?: ModelCallAttendeesFilterInput,
+    limit?: number,
+    nextToken?: string
+  ): Promise<ListCallAttendeesQuery> {
+    const statement = `query ListCallAttendees($filter: ModelCallAttendeesFilterInput, $limit: Int, $nextToken: String) {
+        listCallAttendees(filter: $filter, limit: $limit, nextToken: $nextToken) {
+          __typename
+          items {
+            __typename
+            id
+            videoCallID
+            userID
+            videoCall {
+              __typename
+              id
+              attendeeIds
+              title
+              time
+              status
+              attendees {
+                __typename
+                nextToken
+              }
+              createdAt
+              updatedAt
+            }
+            user {
+              __typename
+              id
+              firstName
+              lastName
+              email
+              type
+              videoCalls {
+                __typename
+                nextToken
+              }
+              createdAt
+              updatedAt
+            }
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {};
+    if (filter) {
+      gqlAPIServiceArguments.filter = filter;
+    }
+    if (limit) {
+      gqlAPIServiceArguments.limit = limit;
+    }
+    if (nextToken) {
+      gqlAPIServiceArguments.nextToken = nextToken;
+    }
+    const response = (await API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    )) as any;
+    return <ListCallAttendeesQuery>response.data.listCallAttendees;
   }
   OnCreatePostListener: Observable<
     SubscriptionResponse<Pick<__SubscriptionContainer, "onCreatePost">>
@@ -1072,8 +2641,41 @@ export class APIService {
           __typename
           id
           attendeeIds
+          title
           time
           status
+          attendees {
+            __typename
+            items {
+              __typename
+              id
+              videoCallID
+              userID
+              videoCall {
+                __typename
+                id
+                attendeeIds
+                title
+                time
+                status
+                createdAt
+                updatedAt
+              }
+              user {
+                __typename
+                id
+                firstName
+                lastName
+                email
+                type
+                createdAt
+                updatedAt
+              }
+              createdAt
+              updatedAt
+            }
+            nextToken
+          }
           createdAt
           updatedAt
         }
@@ -1092,8 +2694,41 @@ export class APIService {
           __typename
           id
           attendeeIds
+          title
           time
           status
+          attendees {
+            __typename
+            items {
+              __typename
+              id
+              videoCallID
+              userID
+              videoCall {
+                __typename
+                id
+                attendeeIds
+                title
+                time
+                status
+                createdAt
+                updatedAt
+              }
+              user {
+                __typename
+                id
+                firstName
+                lastName
+                email
+                type
+                createdAt
+                updatedAt
+              }
+              createdAt
+              updatedAt
+            }
+            nextToken
+          }
           createdAt
           updatedAt
         }
@@ -1112,8 +2747,41 @@ export class APIService {
           __typename
           id
           attendeeIds
+          title
           time
           status
+          attendees {
+            __typename
+            items {
+              __typename
+              id
+              videoCallID
+              userID
+              videoCall {
+                __typename
+                id
+                attendeeIds
+                title
+                time
+                status
+                createdAt
+                updatedAt
+              }
+              user {
+                __typename
+                id
+                firstName
+                lastName
+                email
+                type
+                createdAt
+                updatedAt
+              }
+              createdAt
+              updatedAt
+            }
+            nextToken
+          }
           createdAt
           updatedAt
         }
@@ -1135,6 +2803,38 @@ export class APIService {
           lastName
           email
           type
+          videoCalls {
+            __typename
+            items {
+              __typename
+              id
+              videoCallID
+              userID
+              videoCall {
+                __typename
+                id
+                attendeeIds
+                title
+                time
+                status
+                createdAt
+                updatedAt
+              }
+              user {
+                __typename
+                id
+                firstName
+                lastName
+                email
+                type
+                createdAt
+                updatedAt
+              }
+              createdAt
+              updatedAt
+            }
+            nextToken
+          }
           createdAt
           updatedAt
         }
@@ -1156,6 +2856,38 @@ export class APIService {
           lastName
           email
           type
+          videoCalls {
+            __typename
+            items {
+              __typename
+              id
+              videoCallID
+              userID
+              videoCall {
+                __typename
+                id
+                attendeeIds
+                title
+                time
+                status
+                createdAt
+                updatedAt
+              }
+              user {
+                __typename
+                id
+                firstName
+                lastName
+                email
+                type
+                createdAt
+                updatedAt
+              }
+              createdAt
+              updatedAt
+            }
+            nextToken
+          }
           createdAt
           updatedAt
         }
@@ -1177,6 +2909,38 @@ export class APIService {
           lastName
           email
           type
+          videoCalls {
+            __typename
+            items {
+              __typename
+              id
+              videoCallID
+              userID
+              videoCall {
+                __typename
+                id
+                attendeeIds
+                title
+                time
+                status
+                createdAt
+                updatedAt
+              }
+              user {
+                __typename
+                id
+                firstName
+                lastName
+                email
+                type
+                createdAt
+                updatedAt
+              }
+              createdAt
+              updatedAt
+            }
+            nextToken
+          }
           createdAt
           updatedAt
         }
@@ -1184,5 +2948,194 @@ export class APIService {
     )
   ) as Observable<
     SubscriptionResponse<Pick<__SubscriptionContainer, "onDeleteUser">>
+  >;
+
+  OnCreateCallAttendeesListener: Observable<
+    SubscriptionResponse<Pick<__SubscriptionContainer, "onCreateCallAttendees">>
+  > = API.graphql(
+    graphqlOperation(
+      `subscription OnCreateCallAttendees {
+        onCreateCallAttendees {
+          __typename
+          id
+          videoCallID
+          userID
+          videoCall {
+            __typename
+            id
+            attendeeIds
+            title
+            time
+            status
+            attendees {
+              __typename
+              items {
+                __typename
+                id
+                videoCallID
+                userID
+                createdAt
+                updatedAt
+              }
+              nextToken
+            }
+            createdAt
+            updatedAt
+          }
+          user {
+            __typename
+            id
+            firstName
+            lastName
+            email
+            type
+            videoCalls {
+              __typename
+              items {
+                __typename
+                id
+                videoCallID
+                userID
+                createdAt
+                updatedAt
+              }
+              nextToken
+            }
+            createdAt
+            updatedAt
+          }
+          createdAt
+          updatedAt
+        }
+      }`
+    )
+  ) as Observable<
+    SubscriptionResponse<Pick<__SubscriptionContainer, "onCreateCallAttendees">>
+  >;
+
+  OnUpdateCallAttendeesListener: Observable<
+    SubscriptionResponse<Pick<__SubscriptionContainer, "onUpdateCallAttendees">>
+  > = API.graphql(
+    graphqlOperation(
+      `subscription OnUpdateCallAttendees {
+        onUpdateCallAttendees {
+          __typename
+          id
+          videoCallID
+          userID
+          videoCall {
+            __typename
+            id
+            attendeeIds
+            title
+            time
+            status
+            attendees {
+              __typename
+              items {
+                __typename
+                id
+                videoCallID
+                userID
+                createdAt
+                updatedAt
+              }
+              nextToken
+            }
+            createdAt
+            updatedAt
+          }
+          user {
+            __typename
+            id
+            firstName
+            lastName
+            email
+            type
+            videoCalls {
+              __typename
+              items {
+                __typename
+                id
+                videoCallID
+                userID
+                createdAt
+                updatedAt
+              }
+              nextToken
+            }
+            createdAt
+            updatedAt
+          }
+          createdAt
+          updatedAt
+        }
+      }`
+    )
+  ) as Observable<
+    SubscriptionResponse<Pick<__SubscriptionContainer, "onUpdateCallAttendees">>
+  >;
+
+  OnDeleteCallAttendeesListener: Observable<
+    SubscriptionResponse<Pick<__SubscriptionContainer, "onDeleteCallAttendees">>
+  > = API.graphql(
+    graphqlOperation(
+      `subscription OnDeleteCallAttendees {
+        onDeleteCallAttendees {
+          __typename
+          id
+          videoCallID
+          userID
+          videoCall {
+            __typename
+            id
+            attendeeIds
+            title
+            time
+            status
+            attendees {
+              __typename
+              items {
+                __typename
+                id
+                videoCallID
+                userID
+                createdAt
+                updatedAt
+              }
+              nextToken
+            }
+            createdAt
+            updatedAt
+          }
+          user {
+            __typename
+            id
+            firstName
+            lastName
+            email
+            type
+            videoCalls {
+              __typename
+              items {
+                __typename
+                id
+                videoCallID
+                userID
+                createdAt
+                updatedAt
+              }
+              nextToken
+            }
+            createdAt
+            updatedAt
+          }
+          createdAt
+          updatedAt
+        }
+      }`
+    )
+  ) as Observable<
+    SubscriptionResponse<Pick<__SubscriptionContainer, "onDeleteCallAttendees">>
   >;
 }

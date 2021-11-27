@@ -1,4 +1,4 @@
-type Post @model @auth(rules: [{allow: public}]) {
+type Post @model {
   id: ID!
   imagekey: String!
   author: String
@@ -8,22 +8,19 @@ type Post @model @auth(rules: [{allow: public}]) {
   long: Float
 }
 
-type VideoCall @model @auth(rules: [{allow: public}]) {
+type VideoCall @model {
   id: ID!
-  attendeeIds: [String]
-  title: String
+  attendeeIds : [String]
   time: AWSDateTime
   status: CallStatus
-  attendees: [User] @manyToMany(relationName: "callAttendees")
 }
 
-type User @model @auth(rules: [{allow: public}]) {
+type User @model {
   id: ID!
   firstName: String
   lastName: String
   email: String
   type: UserType
-  videoCalls: [VideoCall] @manyToMany(relationName: "callAttendees")
 }
 
 enum UserType {

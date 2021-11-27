@@ -27,7 +27,7 @@
         },
         "requestAppointment": {
           "deploymentBucketName": "amplify-projectapp-dev-163036-deployment",
-          "s3Key": "amplify-builds/requestAppointment-464a7938445349334955-build.zip"
+          "s3Key": "amplify-builds/requestAppointment-62614d6747754e767672-build.zip"
         }
       }
     }
