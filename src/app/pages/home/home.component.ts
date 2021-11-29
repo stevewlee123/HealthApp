@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core'
-import { APIService, CallStatus } from 'src/app/API.service'
+import { APIService, CallStatus, UserType } from 'src/app/API.service'
 import { startOfDay, endOfDay } from 'date-fns'
 import Auth from '@aws-amplify/auth'
 
@@ -8,6 +8,7 @@ import Auth from '@aws-amplify/auth'
     styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+    doctorView = false
     unApprovedCalls?
     videoCalls?
     constructor(private api: APIService) {}
@@ -16,19 +17,19 @@ export class HomeComponent implements OnInit {
         const today = Date.now()
 
         Auth.currentAuthenticatedUser().then(async (user) => {
-            this.unApprovedCalls = (
-                await this.api.GetUser(user.attributes.sub)
-            ).videoCalls?.items
+            const dbUser = await this.api.GetUser(user.attributes.sub)
+            this.unApprovedCalls = dbUser.videoCalls?.items
                 .filter((call) => call.videoCall.status == CallStatus.requested)
                 .map((call) => call.videoCall)
 
-            this.videoCalls = (
-                await this.api.GetUser(user.attributes.sub)
-            ).videoCalls?.items
+            this.videoCalls = dbUser.videoCalls?.items
                 .filter((call) => call.videoCall.status == CallStatus.approved)
                 .map((call) => call.videoCall)
 
             console.log(user.attributes.sub)
+            if (dbUser.type === UserType.doctor) {
+                this.doctorView = true
+            }
         })
     }
 

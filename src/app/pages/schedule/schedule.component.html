@@ -28,7 +28,7 @@
   </mwl-calendar-month-view>
 
 </div>
-<label *ngIf="clickedDate" for="my-modal-2" class="btn btn-primary modal-button">Request Appointment on {{ clickedDate!
+<label *ngIf="clickedDate && !viewingSelf" for="my-modal-2" class="btn btn-primary modal-button">Request Appointment on {{ clickedDate!
   | date:
   'mediumDate'}}</label>
 <input type="checkbox" id="my-modal-2" class="modal-toggle">

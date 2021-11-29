@@ -37,6 +37,7 @@ import { HttpClient } from '@angular/common/http'
     ]
 })
 export class ScheduleComponent implements OnInit {
+    viewingSelf = false
     doctorId?: string
     doctorEmail?: string
     newEventTimeSlot?: string = 'default'
@@ -68,6 +69,13 @@ export class ScheduleComponent implements OnInit {
         await this.fetchEvents()
         this.doctorId = this.route.snapshot.paramMap.get('id') || ''
         this.doctorEmail = (await this.api.GetUser(this.doctorId!)).email!
+        Auth.currentAuthenticatedUser()
+          .then(user => {
+            if(this.doctorId === user.attributes.sub){
+              this.viewingSelf = true
+            }
+          })
+
         console.log(this.doctorEmail)
     }
 

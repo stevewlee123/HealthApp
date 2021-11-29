@@ -19,6 +19,7 @@ export class VideoChatComponent implements OnInit, OnDestroy {
     myPeer
     activeIncomingStreamIds: string[] = []
     vidActive = true
+    callJoined = false
 
     constructor(private route: ActivatedRoute, private api: APIService) {}
 
@@ -52,8 +53,15 @@ export class VideoChatComponent implements OnInit, OnDestroy {
 
     joinCall() {
         this.myPeer = new Peer(this.userId)
+        if(!!this.myPeer.id){
+          this.callJoined = true
+        }
+
         console.log('My Peer', this.myPeer)
-        this.myPeer.on('error', (err) => console.error(err))
+        this.myPeer.on('error', (err) => {
+            this.callJoined = false
+            console.error(err)
+        })
 
         this.myPeer.on('call', async (call) => {
             console.log('Call Recieved', call)
@@ -152,8 +160,8 @@ export class VideoChatComponent implements OnInit, OnDestroy {
 
     async endCall() {
         const connections = Object.values(this.myPeer.connections)
-        connections.forEach((connection) => (connection as any).close())
-        //await this.myPeer.destroy()
-        console.log(this.myPeer)
+        //connections.forEach((connection) => (connection as any).close())
+        await this.myPeer.destroy()
+        //console.log(this.myPeer)
     }
 }
