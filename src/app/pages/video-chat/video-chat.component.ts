@@ -12,37 +12,38 @@ import { APIService } from 'src/app/API.service'
 })
 export class VideoChatComponent implements OnInit, OnDestroy {
     myVid: any
+    myStream?
     otherVid: any
     callId?: string | null
     userId
     myPeer
     activeIncomingStreamIds: string[] = []
+    vidActive = true
 
     constructor(private route: ActivatedRoute, private api: APIService) {}
 
-    ngOnDestroy() {
-        this.myPeer.destroy()
+    async ngOnDestroy() {
+        console.log('Destroying Peer')
+        await this.myPeer.destroy()
     }
 
-    ngOnInit(): void {
-        this.myVid = document.getElementById('myVid')
+    async ngOnInit() {
+        this.myVid = document.getElementById('myStream')
         this.otherVid = document.getElementById('video-grid')
         this.callId = this.route.snapshot.params.id
         try {
-            from(Auth.currentAuthenticatedUser()).subscribe((user) => {
+            from(Auth.currentAuthenticatedUser()).subscribe(async (user) => {
                 this.userId = user.attributes.sub
                 console.log(this.userId)
-                navigator.mediaDevices
-                    .getUserMedia({ video: true, audio: true })
-                    .then((stream) => {
-                        const myVideo = document.createElement('video')
-                        myVideo.muted = true
-                        myVideo.srcObject = stream
-                        myVideo.addEventListener('loadedmetadata', () => {
-                            myVideo.play()
-                        })
-                        this.myVid.append(myVideo)
-                    })
+                this.myStream = await navigator.mediaDevices.getUserMedia({
+                    video: true,
+                    audio: true
+                })
+                this.myVid.muted = true
+                this.myVid.srcObject = this.myStream
+                this.myVid.addEventListener('loadedmetadata', () => {
+                    this.myVid.play()
+                })
             })
         } catch (e) {
             console.error(e)
@@ -52,59 +53,107 @@ export class VideoChatComponent implements OnInit, OnDestroy {
     joinCall() {
         this.myPeer = new Peer(this.userId)
         console.log('My Peer', this.myPeer)
-        navigator.mediaDevices
-            .getUserMedia({ video: true, audio: true })
-            .then((stream) => {
-                this.myPeer.on('call', (call) => {
-                    call.answer(stream)
-                    call.on('stream', (remoteStream) => {
-                        if (
-                            !this.activeIncomingStreamIds.find(
-                                (id) => id === remoteStream.id
-                            )
-                        ) {
-                            this.activeIncomingStreamIds = [
-                                ...this.activeIncomingStreamIds,
-                                remoteStream.id
-                            ]
-                            console.log('Stream received', remoteStream)
-                            const incomingVideo = document.createElement('video')
-                            //incomingVideo.muted = true
-                            incomingVideo.srcObject = remoteStream
-                            incomingVideo.addEventListener('loadedmetadata', () => {
-                                incomingVideo.play()
-                            })
-                            this.otherVid.append(incomingVideo)
-                        }
-                    })
-                })
+        this.myPeer.on('error', (err) => console.error(err))
 
-                from(this.api.GetVideoCall(this.callId!)).subscribe((call) => {
-                    console.log(call.attendeeIds)
-                    call.attendeeIds
-                        ?.filter((id) => id !== this.userId)
-                        .forEach((attendee) => {
-                            console.log(attendee)
-                            try {
-                                let call = this.myPeer.call(attendee, stream)
-                                console.log('Call', call)
-                                // call.on('stream', (remoteStream) => {
-                                //     const incomingVideo = document.createElement('video')
-                                //     incomingVideo.muted = true
-                                //     incomingVideo.srcObject = remoteStream
-                                //     incomingVideo.addEventListener(
-                                //         'loadedmetadata',
-                                //         () => {
-                                //             incomingVideo.play()
-                                //         }
-                                //     )
-                                //     this.otherVid.append(incomingVideo)
-                                // })
-                            } catch (e) {
-                                console.error(e)
+        this.myPeer.on('call', async (call) => {
+            console.log('Call Recieved', call)
+            await call.answer(this.myStream)
+            call.on('stream', (remoteStream) => {
+                console.log('Stream received', remoteStream)
+                if (!this.activeIncomingStreamIds.find((id) => id === remoteStream.id)) {
+                    this.activeIncomingStreamIds = [
+                        ...this.activeIncomingStreamIds,
+                        remoteStream.id
+                    ]
+
+                    const incomingVideo = document.createElement('video')
+                    //incomingVideo.muted = true
+                    incomingVideo.srcObject = remoteStream
+                    incomingVideo.addEventListener('loadedmetadata', () => {
+                        incomingVideo.play()
+                    })
+                    this.otherVid.append(incomingVideo)
+                }
+            })
+            call.on('close', () => {
+                console.log('connection closed')
+            })
+            call.on('error', (error) => {
+                console.error(error)
+            })
+        })
+
+        from(this.api.GetVideoCall(this.callId!)).subscribe(async (call) => {
+            console.log(call.attendeeIds)
+            call.attendeeIds
+                ?.filter((id) => id !== this.userId)
+                .forEach(async (attendee) => {
+                    console.log(attendee)
+                    try {
+                        console.log('myStream', this.myStream)
+
+                        let call = await this.myPeer.call(attendee, this.myStream)
+                        console.log('Call', call)
+                        call.on('stream', (remoteStream) => {
+                            console.log('Stream received', remoteStream)
+                            if (
+                                !this.activeIncomingStreamIds.find(
+                                    (id) => id === remoteStream.id
+                                )
+                            ) {
+                                this.activeIncomingStreamIds = [
+                                    ...this.activeIncomingStreamIds,
+                                    remoteStream.id
+                                ]
+
+                                const incomingVideo = document.createElement('video')
+                                //incomingVideo.muted = true
+                                incomingVideo.srcObject = remoteStream
+                                incomingVideo.addEventListener('loadedmetadata', () => {
+                                    incomingVideo.play()
+                                })
+                                this.otherVid.append(incomingVideo)
                             }
                         })
+                        call.on('close', () => {
+                            console.log('connection closed')
+                        })
+                        call.on('error', (error) => {
+                            console.error(error)
+                        })
+                    } catch (e) {
+                        console.error(e)
+                    }
                 })
-            })
+        })
+    }
+
+    muteVideo() {
+        const stream = this.myVid.srcObject
+        const vidTrack = stream.getTracks().find((track) => track.kind === 'video')
+        if (this.vidActive) {
+            vidTrack.enabled = false
+        } else {
+            vidTrack.enabled = true
+        }
+        this.vidActive = !this.vidActive
+    }
+
+    muteAudio() {
+        const stream = this.myVid.srcObject
+        const vidTrack = stream.getTracks().find((track) => track.kind === 'audio')
+        if (this.vidActive) {
+            vidTrack.enabled = false
+        } else {
+            vidTrack.enabled = true
+        }
+        this.vidActive = !this.vidActive
+    }
+
+    async endCall() {
+        const connections = Object.values(this.myPeer.connections)
+        connections.forEach((connection) => (connection as any).close())
+        //await this.myPeer.destroy()
+        console.log(this.myPeer)
     }
 }

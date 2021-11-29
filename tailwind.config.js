@@ -22,7 +22,7 @@ module.exports = {
   ],
   daisyui: {
     themes: [
-      "emerald", // first one will be the default theme
+      "cupcake", // first one will be the default theme
     ],
   },
 };

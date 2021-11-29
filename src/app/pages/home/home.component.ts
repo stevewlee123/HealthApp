@@ -14,15 +14,7 @@ export class HomeComponent implements OnInit {
 
     async ngOnInit() {
         const today = Date.now()
-        this.videoCalls = (
-            await this.api.ListVideoCalls({
-                time: {
-                    gt: startOfDay(today).toISOString(),
-                    lt: endOfDay(today).toISOString()
-                }
-            })
-        ).items
-        console.log(this.videoCalls)
+
         Auth.currentAuthenticatedUser().then(async (user) => {
             this.unApprovedCalls = (
                 await this.api.GetUser(user.attributes.sub)
