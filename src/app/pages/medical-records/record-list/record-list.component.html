@@ -1,0 +1,55 @@
+<table *ngIf="imageList">
+    <tr *ngFor="let i of rowIndexArray">
+      <td >
+        <div class="imagebox" *ngIf="imageList[3*i]" >
+          <img [src]="imageList[i*3].imageUrl" class="img-fluid" style="width:500px;height:600px;">
+
+          <a href="imageList[i*3].imageUrl" download={{imageList[i*3].caption}}>{{imageList[3*i].caption}}</a>
+          
+        </div>
+      </td>
+      <td >
+        <div class="imagebox" *ngIf="imageList[3*i+1]" >
+          <img [src]="imageList[i*3+1].imageUrl" class="img-fluid" style="width:500px;height:600px;">
+
+          <a href="imageList[3*i+1].imageUrl" download={{imageList[3*i+1].caption}}>{{imageList[3*i+1].caption}}</a>
+          
+        </div>
+      </td>
+
+      <td >
+        <div class="imagebox" *ngIf="imageList[3*i+2]" >
+          <img [src]="imageList[i*3+2].imageUrl" class="img-fluid" style="width:500px;height:600px;">
+
+          <a href="imageList[3*i+2].imageUrl" download={{imageList[3*i+2].caption}}>{{imageList[3*i+2].caption}}</a>
+          
+        </div>
+      </td>
+
+      <!-- <td>
+        <div class="imagebox" *ngIf="i==0">
+          <a routerLink="/image/upload">
+            <img src="/assets/img/new_image.jpg" class="img-fluid">
+            <span class="imagebox-desc">Insert New Image</span></a>
+        </div>
+        <div class="imagebox" *ngIf="i==0">
+          <img [src]="imageList[3*i-1].imageUrl" class="img-fluid" style="width:500px;height:600px;">
+
+          <a href="imageList[3*i-1].imageUrl" download={{imageList[3*i-1].caption}}>{{imageList[3*i-1].caption}}</a>
+          
+        </div>
+      </td>
+      <td *ngIf="imageList[3*i]">
+        <div class="imagebox">
+          <img [src]="imageList[3*i].imageUrl" class="img-fluid" style="width:500px;height:600px;">
+          <a [href]="imageList[3*i].imageUrl" download={{imageList[3*i].caption}}>{{imageList[3*i].caption}}</a>
+        </div>
+      </td>
+      <td *ngIf="imageList[3*i+1]">
+        <div class="imagebox">
+          <img [src]="imageList[3*i+1].imageUrl" class="img-fluid" style="width:500px;height:600px;">
+          <a [href]="imageList[3*i+1].imageUrl" download={{imageList[3*i+1].caption}}>{{imageList[3*i+1].caption}}</a>
+        </div>
+      </td> -->
+    </tr>
+  </table>
