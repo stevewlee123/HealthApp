@@ -1,8 +1,10 @@
 <div class="navbar mb-2 shadow-lg bg-neutral text-neutral-content rounded-box">
   <div class="flex-1 px-2 mx-2">
-    <span class="text-lg font-bold">
-      daisyUI
-    </span>
+    <a class="btn btn-ghost btn-sm rounded-btn" routerLink="">
+      <span class="text-lg font-bold">
+        HOME
+      </span>
+    </a>
   </div>
   <div class="flex-none hidden px-2 mx-2 lg:flex">
     <div class="flex items-stretch">
@@ -32,7 +34,7 @@
         {{userTypeList}}
 
       </a>
-      <a class="btn btn-ghost btn-sm rounded-btn">
+      <a class="btn btn-ghost btn-sm rounded-btn" routerLink="/records">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
           class="inline-block w-5 mr-2 stroke-current">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

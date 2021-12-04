@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core'
 import { APIService, CallStatus, UserType } from 'src/app/API.service'
 import { startOfDay, endOfDay } from 'date-fns'
 import Auth from '@aws-amplify/auth'
-
+import { DataService } from '../data.service'
 @Component({
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.css']
@@ -11,7 +11,8 @@ export class HomeComponent implements OnInit {
     doctorView = false
     unApprovedCalls?
     videoCalls?
-    constructor(private api: APIService) {}
+    constructor(private api: APIService,
+        private data: DataService) {}
 
     async ngOnInit() {
         const today = Date.now()
@@ -30,6 +31,7 @@ export class HomeComponent implements OnInit {
             if (dbUser.type === UserType.doctor) {
                 this.doctorView = true
             }
+            this.data.changeMessage(this.doctorView)
         })
     }
 

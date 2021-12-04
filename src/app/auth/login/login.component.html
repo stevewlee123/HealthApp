@@ -9,34 +9,29 @@
       </p>
     </div>
     <div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+      <div class="card-body">
       <form [formGroup]="loginForm" (ngSubmit)="onLogin(username?.value, password?.value)">
-        <div class="card-body">
-          <div class="form-control">
-            <label class="label">
-              <span class="label-text">Username</span>
-            </label>
-            <input type="text" placeholder="Username" class="input input-bordered" formControlName="username" />
+          <div class="form-group">
+            <input type="text" placeholder="Username" class="input input-bordered form-control" formControlName="username" />
             <div *ngIf="username?.invalid && (username?.dirty || username?.touched)">
               <div class="text-red-500 text-xs"  *ngIf="username?.errors?.required">Username is required.</div>
             </div>
           </div>
-          <div class="form-control">
-            <label class="label">
-              <span class="label-text">Password</span>
-            </label>
-            <input type="password" placeholder="password" class="input input-bordered" formControlName="password" />
+          <div class="form-group">
+            <input type="password" placeholder="password" class="input input-bordered form-control " formControlName="password" />
             <label class="label">
               <a href="#" class="label-text-alt">Forgot password?</a>
             </label>
           </div>
-          <div class="form-control mt-6">
-            <input type="submit" value="Login" class="btn btn-primary" />
+          <div class="form-group mt-6">
+            <input type="submit" value="Login" class="btn btn-primary form-control" />
           </div>
-          <div class="form-control mt-6">
-            <input type="button" value="Register" class="btn btn-primary" routerLink="/register" />
+          <div class="form-group mt-6">
+            <input type="button" value="Register" class="btn btn-primary form-control" routerLink="/register" />
           </div>
-        </div>
+        
       </form>
+    </div>
     </div>
   </div>
 </div>

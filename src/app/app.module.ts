@@ -20,6 +20,15 @@ import { CommonModule } from '@angular/common'
 import { FlatpickrModule } from 'angularx-flatpickr';
 import { DoctorListComponent } from './pages/doctor-list/doctor-list.component';
 import {HttpClientModule} from '@angular/common/http';
+import { MedicalRecordsComponent } from './pages/medical-records/medical-records.component';
+import { environment } from 'src/environments/environment'
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFireStorageModule } from '@angular/fire/compat/storage';
+import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
+import { RecordsComponent } from './pages/medical-records/record/record.component'
+import { RecordsListComponent } from './pages/medical-records/record-list/record-list.component'
+import { DataService } from './pages/data.service'
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 @NgModule({
     declarations: [
@@ -33,9 +42,15 @@ import {HttpClientModule} from '@angular/common/http';
         NavbarComponent,
         VideoChatComponent,
         ScheduleComponent,
-        DoctorListComponent
+        DoctorListComponent,
+        MedicalRecordsComponent,
+        RecordsComponent,
+        RecordsListComponent
     ],
     imports: [
+        AngularFireModule.initializeApp(environment.firebaseConfig),
+        AngularFireDatabaseModule,
+        AngularFireStorageModule ,
         BrowserModule,
         HttpClientModule,
         AppRoutingModule,
@@ -43,10 +58,11 @@ import {HttpClientModule} from '@angular/common/http';
         FormsModule,
         CommonModule,
         BrowserAnimationsModule,
+        PdfViewerModule ,
         FlatpickrModule.forRoot(),
         CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory })
     ],
-    providers: [],
+    providers: [{provide: DataService}],
     bootstrap: [AppComponent]
 })
 export class AppModule {}
