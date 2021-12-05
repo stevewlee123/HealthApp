@@ -10,10 +10,11 @@ import { APIService, User, UserType } from 'src/app/API.service'
 })
 export class DoctorListComponent implements OnInit {
     doctors: User[] = []
-    constructor(private api: APIService) {}
+    constructor(private api: APIService,
+        ) {}
 
     async ngOnInit() {
-        this.doctors = (await this.api.ListUsers({ type: { eq: UserType.doctor } }))
+        this.doctors = (await this.api.ListUsers({ type: { eq: UserType.patient } }))
             .items as User[]
         console.log(this.doctors)
     }

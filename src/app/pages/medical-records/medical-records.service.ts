@@ -13,11 +13,12 @@ export class RecordsService {
 
   imageDetailList!: AngularFireList<any>;
 
-  getImageDetailList() {
-    this.imageDetailList = this.firebase.list('imageDetails');
+  getImageDetailList(name) {
+    this.imageDetailList = this.firebase.list(name);
   }
 
-  insertImageDetails(imageDetails) {
-    this.imageDetailList.push(imageDetails);
+  insertImageDetails(name, imageDetails) {
+    const itemsRef = this.firebase.list(name);
+    itemsRef.push(imageDetails);
   }
 }

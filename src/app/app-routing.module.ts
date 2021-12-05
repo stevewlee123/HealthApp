@@ -37,9 +37,9 @@ const routes: Routes = [
               component: DoctorListComponent
             },
             {
-                path: 'records', component: MedicalRecordsComponent, children: [
-                  { path: 'upload', component: RecordsComponent},
-                  { path: 'list', component: RecordsListComponent}
+                path: 'records/:id', component: MedicalRecordsComponent, children: [
+                  { path: 'upload/:id', component: RecordsComponent},
+                  { path: 'list/:id', component: RecordsListComponent}
                 ]
               }
         ]

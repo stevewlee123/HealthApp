@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { RecordsService } from '../medical-records.service';
 
 @Component({
@@ -10,9 +11,14 @@ export class RecordsListComponent implements OnInit {
   imageList!: any[];
   rowIndexArray!: any[];
 
-  constructor(private service: RecordsService) { }
+  userId?:string;
+
+  constructor(private service: RecordsService,
+    private route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.userId = this.route.snapshot.paramMap.get('id') || '';
+    this.service.getImageDetailList(this.userId);
     this.service.imageDetailList.snapshotChanges().subscribe(
       list => {
         

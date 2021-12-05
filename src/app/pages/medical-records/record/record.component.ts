@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angula
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { finalize } from "rxjs/operators";
 import { RecordsService } from "../medical-records.service"
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-image',
@@ -13,6 +14,7 @@ export class RecordsComponent implements OnInit {
   imgSrc!: string;
   selectedImage: any = null;
   isSubmitted!: boolean;
+  userId?: string;
 
   formTemplate = new FormGroup({
     caption: new FormControl('', Validators.required),
@@ -20,10 +22,16 @@ export class RecordsComponent implements OnInit {
     imageUrl: new FormControl('', Validators.required)
   })
 
-  constructor(private storage: AngularFireStorage, private service: RecordsService) { }
+  constructor(
+    private storage: AngularFireStorage, 
+    private service: RecordsService,
+    private route: ActivatedRoute
+    ){}
 
   ngOnInit() {
     this.resetForm();
+    this.userId = this.route.snapshot.paramMap.get('id') || '';
+    console.log(this.userId );
   }
 
   showPreview(event: any) {
@@ -40,15 +48,21 @@ export class RecordsComponent implements OnInit {
   }
 
   onSubmit(formValue) {
+    formValue["category"] = this.userId;
     this.isSubmitted = true;
     if (this.formTemplate.valid) {
       var filePath = `${formValue.category}/${this.selectedImage.name.split('.').slice(0, -1).join('.')}_${new Date().getTime()}`;
+      console.log(filePath);
+      console.log(formValue);
       const fileRef = this.storage.ref(filePath);
       this.storage.upload(filePath, this.selectedImage).snapshotChanges().pipe(
         finalize(() => {
           fileRef.getDownloadURL().subscribe((url) => {
             formValue['imageUrl'] = url;
-            this.service.insertImageDetails(formValue);
+            
+            console.log(url);
+            console.log(formValue);
+            this.service.insertImageDetails(this.userId, formValue);
             this.resetForm();
           })
         })
@@ -65,7 +79,7 @@ export class RecordsComponent implements OnInit {
     this.formTemplate.setValue({
       caption: '',
       imageUrl: '',
-      category: 'Animal'
+      category: 'prescription'
     });
     this.imgSrc = '/assets/img/image_placeholder.jpg';
     this.selectedImage = null;

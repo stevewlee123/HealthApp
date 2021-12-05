@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import Auth from '@aws-amplify/auth';
 import { APIService, UserType } from 'src/app/API.service';
+import { DataService } from 'src/app/pages/data.service';
 
 @Component({
   selector: 'app-navbar',
@@ -11,8 +12,9 @@ import { APIService, UserType } from 'src/app/API.service';
 export class NavbarComponent implements OnInit {
   userId?: string
   userTypeList = "Doctors"
-
-  constructor(private api:APIService, private router: Router) { }
+  doctorView = false;
+  constructor(private api:APIService, private router: Router
+    ) { }
 
   ngOnInit(): void {
     Auth.currentAuthenticatedUser()
@@ -23,6 +25,7 @@ export class NavbarComponent implements OnInit {
         if(dbUser.type === UserType.doctor){
           console.log("Here")
           this.userTypeList = "Patients"
+          this.doctorView = true;
         }
       })
 
