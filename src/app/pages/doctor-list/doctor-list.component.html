@@ -14,7 +14,7 @@
         <td>{{doctor.firstName}}</td>
         <td>{{doctor.lastName}}</td>
         <td>{{doctor.email}}</td>
-        <td>
+        <td *ngIf="uerType">
           <div class="btn btn-primary" [routerLink]="['/records', doctor.id]">
             Medical Records</div>
         </td>

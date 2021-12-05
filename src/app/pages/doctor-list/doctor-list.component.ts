@@ -9,9 +9,11 @@ import { APIService, User, UserType } from 'src/app/API.service'
     styleUrls: ['./doctor-list.component.css']
 })
 export class DoctorListComponent implements OnInit {
-    doctors: User[] = []
-    fetchUserType: UserType = UserType.doctor
-    constructor(private api: APIService) {}
+    doctors: User[] = [];
+    fetchUserType: UserType = UserType.doctor;
+    uerType = false;
+    constructor(private api: APIService,
+    ) {}
 
     async ngOnInit() {
         Auth.currentAuthenticatedUser().then(async (user) => {
@@ -19,10 +21,12 @@ export class DoctorListComponent implements OnInit {
             console.log(dbUser)
             if (dbUser.type === UserType.doctor) {
                 this.fetchUserType = UserType.patient
+                this.uerType = true;
             }
-        })
-        this.doctors = (await this.api.ListUsers({ type: { eq: this.fetchUserType} }))
+            this.doctors = (await this.api.ListUsers({ type: { eq: this.fetchUserType} }))
             .items as User[]
         console.log(this.doctors)
+        })
+
     }
 }
