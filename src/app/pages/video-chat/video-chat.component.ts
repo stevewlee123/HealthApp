@@ -30,7 +30,7 @@ export class VideoChatComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
         this.myVid = document.getElementById('myStream')
-        this.otherVid = document.getElementById('video-grid')
+        this.otherVid = document.getElementById('otherStream')
         this.callId = this.route.snapshot.params.id
         try {
             from(Auth.currentAuthenticatedUser()).subscribe(async (user) => {
@@ -53,8 +53,8 @@ export class VideoChatComponent implements OnInit, OnDestroy {
 
     joinCall() {
         this.myPeer = new Peer(this.userId)
-        if(!!this.myPeer.id){
-          this.callJoined = true
+        if (!!this.myPeer.id) {
+            this.callJoined = true
         }
 
         console.log('My Peer', this.myPeer)
@@ -74,13 +74,11 @@ export class VideoChatComponent implements OnInit, OnDestroy {
                         remoteStream.id
                     ]
 
-                    const incomingVideo = document.createElement('video')
                     //incomingVideo.muted = true
-                    incomingVideo.srcObject = remoteStream
-                    incomingVideo.addEventListener('loadedmetadata', () => {
-                        incomingVideo.play()
+                    this.otherVid.srcObject = remoteStream
+                    this.otherVid.addEventListener('loadedmetadata', () => {
+                        this.otherVid.play()
                     })
-                    this.otherVid.append(incomingVideo)
                 }
             })
             call.on('close', () => {
@@ -114,13 +112,11 @@ export class VideoChatComponent implements OnInit, OnDestroy {
                                     remoteStream.id
                                 ]
 
-                                const incomingVideo = document.createElement('video')
                                 //incomingVideo.muted = true
-                                incomingVideo.srcObject = remoteStream
-                                incomingVideo.addEventListener('loadedmetadata', () => {
-                                    incomingVideo.play()
+                                this.otherVid.srcObject = remoteStream
+                                this.otherVid.addEventListener('loadedmetadata', () => {
+                                    this.otherVid.play()
                                 })
-                                this.otherVid.append(incomingVideo)
                             }
                         })
                         call.on('close', () => {
