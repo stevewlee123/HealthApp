@@ -5,12 +5,10 @@
     "defaultAuthType": {
       "mode": "API_KEY",
       "expirationTime": 365,
-      "apiKeyExpirationDate": "2022-11-26T22:27:56.473Z",
       "keyDescription": ""
     },
     "conflictResolution": {},
     "apiName": "projectapp",
-    "gqlSchemaPath": "/home/snalamati/HealthApp/amplify/backend/api/projectapp/schema.graphql",
-    "additionalAuthTypes": []
+    "gqlSchemaPath": "/home/snalamati/HealthApp/amplify/backend/api/projectapp/schema.graphql"
   }
 }
