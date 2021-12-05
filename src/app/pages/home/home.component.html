@@ -22,7 +22,7 @@
               <div class="badge">{{item.status}}</div>
             </td>
             <td>
-              <div class="btn btn-primary btn-sm" [routerLink]="['/call', item.id]">
+              <div class="btn btn-primary" [routerLink]="['/call', item.id]">
                 Join Call</div>
             </td>
           </tr>
@@ -54,11 +54,11 @@
             <td>{{call.time | date:
               'mediumDate' }}</td>
             <td>
-              <div class="btn btn-primary btn-sm" (click)="approveCallRequest(call.id)">
+              <div class="btn btn-primary " (click)="approveCallRequest(call.id)">
                 Approve</div>
             </td>
             <td>
-              <div class="btn btn-primary btn-sm btn-accent">
+              <div class="btn btn-primary btn-accent">
                 Reschedule</div>
             </td>
           </tr>

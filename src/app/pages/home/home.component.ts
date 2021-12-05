@@ -11,11 +11,10 @@ export class HomeComponent implements OnInit {
     doctorView = false
     unApprovedCalls?
     videoCalls?
-    constructor(private api: APIService,
-        private data: DataService) {}
+    constructor(private api: APIService, private data: DataService) {}
 
     async ngOnInit() {
-        const today = Date.now()
+        const today = new Date()
 
         Auth.currentAuthenticatedUser().then(async (user) => {
             const dbUser = await this.api.GetUser(user.attributes.sub)
@@ -24,7 +23,12 @@ export class HomeComponent implements OnInit {
                 .map((call) => call.videoCall)
 
             this.videoCalls = dbUser.videoCalls?.items
-                .filter((call) => call.videoCall.status == CallStatus.approved)
+                .filter(
+                    (call) =>
+                        call.videoCall.status == CallStatus.approved &&
+                        today > startOfDay(new Date(call.videoCall.time!)) &&
+                        today < endOfDay(new Date(call.videoCall.time!))
+                )
                 .map((call) => call.videoCall)
 
             console.log(user.attributes.sub)
