@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core'
-import { FormControl, FormGroup, Validators } from '@angular/forms'
+import { FormControl, FormGroup, Validators,ReactiveFormsModule} from '@angular/forms'
 import { Router } from '@angular/router'
 import Auth from '@aws-amplify/auth'
 import { from } from 'rxjs'

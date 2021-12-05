@@ -2,34 +2,34 @@
   <div class="card w-full max-w-sm shadow-2xl bg-base-100">
     <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
       <div class="card-body">
-        <div class="form-control">
+        <div class="form-group">
           <label class="label">
             <span class="label-text">First Name</span>
           </label>
-          <input type="text" placeholder="First Name" class="input input-bordered" formControlName="firstName" />
+          <input type="text" placeholder="First Name" class="input input-bordered form-control" formControlName="firstName" />
           <div *ngIf="firstName?.invalid && (firstName?.dirty || firstName?.touched)">
             <div class="text-red-500 text-xs" *ngIf="firstName?.errors?.required">First Name is required.</div>
           </div>
         </div>
-        <div class="form-control">
+        <div class="form-group">
           <label class="label">
             <span class="label-text">Last Name</span>
           </label>
-          <input type="text" placeholder="Last Name" class="input input-bordered" formControlName="lastName" />
+          <input type="text" placeholder="Last Name" class="input input-bordered form-control" formControlName="lastName" />
           <div *ngIf="lastName?.invalid && (lastName?.dirty || lastName?.touched)">
             <div class="text-red-500 text-xs" *ngIf="lastName?.errors?.required">Last Name is required.</div>
           </div>
         </div>
-        <div class="form-control">
+        <div class="form-group">
           <label class="label">
             <span class="label-text">Username</span>
           </label>
-          <input type="text" placeholder="Username" class="input input-bordered" formControlName="username" />
+          <input type="text" placeholder="Username" class="input input-bordered form-control" formControlName="username" />
           <div *ngIf="username?.invalid && (username?.dirty || username?.touched)">
             <div class="text-red-500 text-xs" *ngIf="username?.errors?.required">Username is required.</div>
           </div>
         </div>
-        <div class="form-control">
+        <div class="form-group">
           <label class="label">
             <span class="label-text">Email</span>
           </label>
@@ -39,24 +39,24 @@
             <div *ngIf="email?.errors?.email">Please enter a valid email</div>
           </div> -->
         </div>
-        <div class="form-control">
+        <div class="form-group">
           <label class="label">
             <span class="label-text">Password</span>
           </label>
-          <input type="password" placeholder="Password" class="input input-bordered" formControlName="password" />
+          <input type="password" placeholder="Password" class="input input-bordered form-control" formControlName="password" />
         </div>
-        <div class="form-control">
+        <div class="form-group">
           <label class="label">
             <span class="label-text">Confirm Password</span>
           </label>
-          <input type="password" placeholder="Confirm Password" class="input input-bordered"
+          <input type="password" placeholder="Confirm Password" class="input input-bordered form-control"
             formControlName="confirmPassword" />
         </div>
-        <div class="form-control mt-6">
-          <input type="submit" value="Register" class="btn btn-primary" />
+        <div class="form-group mt-6">
+          <input type="submit" value="Register" class="btn btn-primary form-control" />
         </div>
-        <div class="form-control mt-6">
-          <input type="button" value="To Login" class="btn btn-primary" routerLink="/login" />
+        <div class="form-group mt-6">
+          <input type="button" value="To Login" class="btn btn-primary form-control" routerLink="/login" />
         </div>
       </div>
     </form>
