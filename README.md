@@ -15,3 +15,14 @@ There are "Home Component", "Login", "Register", "Confirm User", "Doctor/patient
 
 The page routing details can be found in "app-routing.module.ts" file.
 
+## Patient Instruction
+
+Once you started the app, we can register a new account based on your info. One verify-code email will be sent to your email account and copy the code to confirm your code on the web.
+
+As a patient, you can have the access the home page, schedule page, medical record page, doctor list page and video chat page.
+
+## Doctor Instruction
+
+Doctor Account: sashank/123123123.
+
+In addition to the all the pages metioned in patient instruction, doctors have the access to uploading the medical record of each patient. The gate is in the patient list page with the medical record button. Also, doctors can approve the requests in the home page.
