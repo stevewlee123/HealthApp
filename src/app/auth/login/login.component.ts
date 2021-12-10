@@ -17,6 +17,8 @@ export class LoginComponent implements OnInit {
         password: new FormControl('')
     })
 
+    loginError = false;
+
     get username() {
         return this.loginForm.get('username')
     }
@@ -60,6 +62,9 @@ export class LoginComponent implements OnInit {
                     this.router.navigate(['/confirmUser'], {
                         queryParams: { username: username }
                     })
+                }
+                else{
+                    this.loginError = true;
                 }
             }
         )
