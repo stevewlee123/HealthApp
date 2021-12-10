@@ -33,6 +33,7 @@ export class LoginComponent implements OnInit {
 
     ngOnInit(): void {}
 
+    // login founction
     onLogin(username: string, password: string) {
         from(this.auth.signIn(username, password)).subscribe(
             async (user) => {

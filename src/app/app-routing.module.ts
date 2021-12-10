@@ -14,6 +14,7 @@ import { RecordsComponent } from './pages/medical-records/record/record.componen
 import { ScheduleComponent } from './pages/schedule/schedule.component'
 import { VideoChatComponent } from './pages/video-chat/video-chat.component'
 
+// App routing map
 const routes: Routes = [
     {
         path: '',

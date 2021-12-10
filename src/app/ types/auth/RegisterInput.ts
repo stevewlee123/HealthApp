@@ -1,3 +1,4 @@
+// Register default inputs
 export interface RegisterInput {
   username: string
   email: string

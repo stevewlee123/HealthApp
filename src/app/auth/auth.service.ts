@@ -8,6 +8,7 @@ import { RegisterInput } from '../ types/auth/RegisterInput';
 export class AuthService {
     constructor() {}
 
+    //signUp submit
     signUp(registerUser: RegisterInput) {
         return Auth.signUp({
             username: registerUser.username,
@@ -24,10 +25,12 @@ export class AuthService {
             .catch((err) => console.log(err));
     }
 
+    // signIn submit
     signIn(email: string, password: string) {
         return Auth.signIn(email, password);
     }
 
+    
     confirmUser(username: string, code: string) {
         // After retrieveing the confirmation code from the user
         return Auth.confirmSignUp(username, code, {

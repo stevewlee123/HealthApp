@@ -25,6 +25,7 @@ export class ConfirmUserComponent implements OnInit {
         this.username = this.route.snapshot.queryParamMap.get('username') || ''
     }
 
+    // sumbit the verify code
     verifyUser() {
         console.log(this.username)
         from(this.auth.confirmUser(this.username, this.verificationCode.value)).subscribe(

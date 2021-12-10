@@ -1,12 +1,9 @@
 <div class="flex justify-center mt-8">
   <div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
     <div class="card-body">
-      <div class="form-control">
-        <label class="label">
-          <span class="label-text">Enter Verification Code</span>
-        </label>
+      <div class="form-group">
         <input type="text" placeholder="Enter verification code" [formControl]="verificationCode"
-          class="input input-bordered" />
+          class="input input-bordered form-control" />
         <div *ngIf="
           verificationCode?.invalid &&
           (verificationCode?.dirty || verificationCode?.touched)
@@ -18,7 +15,7 @@
           </div>
         </div>
       </div>
-      <button (click)="verifyUser()">Verify User</button>
+      <button (click)="verifyUser()" class="btn btn-primary">Verify User</button>
     </div>
   </div>
 </div>
