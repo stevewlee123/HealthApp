@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import { FormControl, Validators } from '@angular/forms'
-import { ActivatedRoute } from '@angular/router'
+import { ActivatedRoute, Router } from '@angular/router'
 import Auth from '@aws-amplify/auth'
 import { from } from 'rxjs'
 import { APIService } from 'src/app/API.service'
@@ -18,7 +18,8 @@ export class ConfirmUserComponent implements OnInit {
     constructor(
         private auth: AuthService,
         private route: ActivatedRoute,
-        private api: APIService
+        private api: APIService,
+        private router: Router
     ) {}
 
     ngOnInit(): void {
@@ -31,6 +32,7 @@ export class ConfirmUserComponent implements OnInit {
         from(this.auth.confirmUser(this.username, this.verificationCode.value)).subscribe(
             (user) => {
                 console.log('Confirmed user', user)
+                this.router.navigate(['/'])
             },
             (err) => console.error('Error Confirming User: ', err)
         )

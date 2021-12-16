@@ -66,15 +66,16 @@ export class ScheduleComponent implements OnInit {
     ) {}
 
     async ngOnInit() {
-        await this.fetchEvents()
+        console.log(this.route.snapshot.paramMap)
         this.doctorId = this.route.snapshot.paramMap.get('id') || ''
+        console.log(this.doctorId)
+        await this.fetchEvents()
         this.doctorEmail = (await this.api.GetUser(this.doctorId!)).email!
-        Auth.currentAuthenticatedUser()
-          .then(user => {
-            if(this.doctorId === user.attributes.sub){
-              this.viewingSelf = true
+        Auth.currentAuthenticatedUser().then((user) => {
+            if (this.doctorId === user.attributes.sub) {
+                this.viewingSelf = true
             }
-          })
+        })
 
         console.log(this.doctorEmail)
     }
@@ -99,33 +100,51 @@ export class ScheduleComponent implements OnInit {
         console.log(getStart(this.viewDate).toISOString())
 
         this.events$ = from(
-            this.api.ListVideoCalls({
-                time: {
-                    gt: getStart(this.viewDate).toISOString(),
-                    lt: getEnd(this.viewDate).toISOString()
-                },
-                status: {
-                  eq: CallStatus.approved
-                }
-            })
+            // this.api.ListVideoCalls({
+            //     time: {
+            //         gt: getStart(this.viewDate).toISOString(),
+            //         lt: getEnd(this.viewDate).toISOString()
+            //     },
+            //     status: {
+            //       eq: CallStatus.approved
+            //     }
+            // })
+            this.api.GetUser(this.doctorId!)
         ).pipe(
-            map((calls) => {
-                return calls.items!.map((call) => {
+            // map((calls) => {
+            //     return calls.items!.map((call) => {
+            //         return {
+            //             title: call.title,
+            //             start: new Date(call?.time!),
+            //             color: {
+            //                 primary: '#e3bc08',
+            //                 secondary: '#FDF1BA'
+            //             },
+            //             allDay: false,
+            //             meta: {
+            //                 call
+            //             }
+            //         } as CalendarEvent<{ call: VideoCall }>
+            //     })
+            // })
+            map((user) => {
+                return user.videoCalls!.items!.map((call) => {
                     return {
-                        title: call.title,
-                        start: new Date(call?.time!),
+                        title: call.videoCall.title,
+                        start: new Date(call.videoCall.time!),
                         color: {
                             primary: '#e3bc08',
                             secondary: '#FDF1BA'
                         },
                         allDay: false,
                         meta: {
-                            call
+                            call: call.videoCall
                         }
                     } as CalendarEvent<{ call: VideoCall }>
                 })
             })
         )
+        console.log(this.events$)
     }
 
     dayClicked({
@@ -157,8 +176,15 @@ export class ScheduleComponent implements OnInit {
     }
 
     eventClicked(event: CalendarEvent<{ call: VideoCall }>): void {
-        console.log(event)
-        this.router.navigate(['/call', event.meta?.call.id])
+        Auth.currentAuthenticatedUser().then((user) => {
+            if (
+                !!event.meta?.call.attendeeIds?.find(
+                    (attendeeId) => attendeeId === user.attributes.sub
+                )
+            ) {
+                this.router.navigate(['/call', event.meta?.call.id])
+            }
+        })
     }
 
     async requestEvent() {
@@ -169,7 +195,7 @@ export class ScheduleComponent implements OnInit {
                 this.newEventTimeSlot! +
                 this.clickedDate?.toString().substring(21)!
         )
-        const user = (await Auth.currentAuthenticatedUser())
+        const user = await Auth.currentAuthenticatedUser()
         const userId = user.attributes.sub
         console.log(userId)
         const attendees = [this.doctorId, userId]

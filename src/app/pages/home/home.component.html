@@ -58,8 +58,23 @@
                 Approve</div>
             </td>
             <td>
-              <div class="btn btn-primary btn-accent">
-                Reschedule</div>
+              <!-- <div for="my-modal-2" class="btn btn-primary modal-button" >
+                Reschedule</div> -->
+                <label for="my-modal-2" class="btn btn-primary modal-button" (click)="startReschedule(call)">Reschedule</label>
+                <input type="checkbox" id="my-modal-2" class="modal-toggle">
+                <div class="modal">
+                  <div class="modal-box">
+                    <select class="select select-bordered w-full max-w-xs" [(ngModel)]="newEventTimeSlot">
+                      <option disabled="disabled" selected="selected" value="default">Choose Appointment Time</option>
+                      <option *ngFor="let slot of timeSlots;">{{slot}} </option>
+                    </select>
+                
+                    <div class="modal-action">
+                      <label for="my-modal-2" class="btn btn-primary" (click)="rescheduleEvent()">Accept</label>
+                      <label for="my-modal-2" class="btn">Close</label>
+                    </div>
+                  </div>
+                </div>
             </td>
           </tr>
 
@@ -68,3 +83,5 @@
     </div>
   </div>
 </div>
+
+

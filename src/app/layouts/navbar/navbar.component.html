@@ -1,8 +1,8 @@
 <div class="navbar mb-2 shadow-lg bg-accent ">
   <div class="flex-1 px-2 mx-2">
-    <span class="text-lg font-bold" routerLink="">
-      Home
-    </span>
+    <button class="text-lg font-bold btn btn-ghost rounded-btn" routerLink="">
+      Find Your Doc
+    </button>
   </div>
   <div class="flex-none hidden px-2 mx-2 lg:flex">
     <div class="flex items-stretch">
@@ -40,7 +40,7 @@
   </div>
   <div class="flex-none">
     <div class="dropdown dropdown-end">
-      <div tabindex="0" class="m-1 btn">Dropdown</div>
+      <div tabindex="0" class="m-1 btn">{{initials}}</div>
       <ul tabindex="0" class="p-2 shadow menu dropdown-content rounded-box w-52 text-black">
         <li>
           <a (click)="logOut()">Log Out</a>
